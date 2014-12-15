@@ -2,9 +2,8 @@
 #include <QMainWindow>
 
 class QAction;
-class QToolBar;
-class QTabWidget;
 class QWidget;
+class QTabWidget;
 class QScrollArea;
 
 class PDFFactory : public QMainWindow {
