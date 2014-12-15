@@ -11,8 +11,10 @@ PDFFactory::PDFFactory(void) {
 
 /* Create the shit we need for our window. */
 void PDFFactory::createWidgets(void) {
+  /* Set central widget to be the container root. */
   centralWidget = new QWidget();
   QVBoxLayout* layout = new QVBoxLayout();
+  layout->setContentsMargins(2, 2, 2, 2);
   centralWidget->setLayout(layout);
   setCentralWidget(centralWidget);
 
@@ -26,7 +28,15 @@ void PDFFactory::createWidgets(void) {
   ribbon->setFixedHeight(100);
   layout->addWidget(ribbon);
 
-  /*setWindowIcon(QIcon(":/img/hpdf.png"));*/
+  /* Create main area (table). */
+  pdfTableView = new QWidget();
+  pdfTableView->setLayout(new QVBoxLayout());
+  pdfTableView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  scrollArea = new QScrollArea();
+  scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  layout->addWidget(scrollArea);
+
+  setWindowIcon(QIcon(":/img/hpdf.png"));
   setGeometry(0, 0, 550, 650);
 }
 
@@ -64,9 +74,12 @@ void PDFFactory::createActions(void) {
   pasteAction = new QAction(tr("&Paste"), this);
   pasteAction->setIcon(QIcon(":/img/paste.png"));
   pasteAction->setShortcut(tr("Ctrl+V"));
-  pasteAction->setStatusTip(tr("Paste clipboard's contents into current"
-                               "selection"));
+  pasteAction->setStatusTip(tr("Paste clipboard's contents into current selection"));
   /*connect(pasteAction, SIGNAL(triggered()), this, SLOT(paste()))*/
+
+  aboutAction = new QAction(tr("A&bout"), this);
+  aboutAction->setIcon(QIcon(":/img/about.png"));
+  aboutAction->setStatusTip(tr("About this program"));
 }
 
 void PDFFactory::createToolBars() {
@@ -74,18 +87,37 @@ void PDFFactory::createToolBars() {
   fileToolBar->addAction(openAction);
   fileToolBar->addAction(exportAction);
   fileToolBar->addAction(exportAllAction);
+  fileToolBar->setIconSize(QSize(48, 48));
 
   editToolBar = new QToolBar(tr("Edit"));
   editToolBar->addAction(cutAction);
   editToolBar->addAction(copyAction);
   editToolBar->addAction(pasteAction);
+  editToolBar->setIconSize(QSize(48, 48));
+
+  helpToolBar = new QToolBar(tr("Help"));
+  helpToolBar->addAction(aboutAction);
+  helpToolBar->setIconSize(QSize(48, 48));
 }
 
 void PDFFactory::createRibbon(void) {
  QWidget* tabFile = ribbon->widget(0);
  QVBoxLayout* layoutTabFile = new QVBoxLayout();
- tabFile->setLayout(layoutTabFile);
+ layoutTabFile->setContentsMargins(2, 0, 2, 0);
  layoutTabFile->addWidget(fileToolBar);
+ tabFile->setLayout(layoutTabFile);
+
+ QWidget* tabEdit = ribbon->widget(1);
+ QVBoxLayout* layoutTabEdit = new QVBoxLayout();
+ layoutTabEdit->setContentsMargins(2, 0, 2, 0);
+ layoutTabEdit->addWidget(editToolBar);
+ tabEdit->setLayout(layoutTabEdit);
+
+ QWidget* tabHelp = ribbon->widget(3);
+ QVBoxLayout* layoutTabHelp = new QVBoxLayout();
+ layoutTabHelp->setContentsMargins(2, 0, 2, 0);
+ layoutTabHelp->addWidget(helpToolBar);
+ tabHelp->setLayout(layoutTabHelp);
 }
 
 void PDFFactory::createStatusBar(void) {
