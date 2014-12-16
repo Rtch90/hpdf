@@ -18,36 +18,29 @@ TableView::TableView(QWidget* parent) : QWidget(parent) {
   scrollArea->setWidget(frame);
   frame->setLayout(layout);
   frame->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-  int i = 0;
-
-  /* TODO: Page widget is placed for testing only.
-   * To remove pagewidget and add filewidgets later,
-   * use QVector<PDFFile> files to store files.
-   */
-  /*for(i = 0; i < 10; i++) {
-    test[i] = new PDFPageWidget();
-    test[i]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    
-    layout->addWidget(test[i]);
-  }*/
-
-  for(i = 0; i < 10; i++) {
-    test[i] = new PDFFileWidget();
-    /*test[i]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Ignored);*/
-
-    test[i]->setAncestor(this);
-    layout->addWidget(test[i]);
-  }
-  /* End TODO. */
   frame->adjustSize();
+  loadFile("/home/allanis/docs/loa.pdf");
+  loadFile("/home/allanis/docs/loa.pdf");
+}
+
+void TableView::loadFile(QString fileName) {
+  filenames.append(fileName);
+  Poppler::Document* doc = Poppler::Document::load(fileName);
+  files.append(doc);
+  PDFFileWidget* pfw = new PDFFileWidget();
+  pfw->setAncestor(this);
+  pfw->setDocument(doc, fileName);
+
+  fileWidgets.append(pfw);
+  layout->addWidget(pfw);
 }
 
 void TableView::paintEvent(QPaintEvent* event) {
   frame->adjustSize();
   int newWidth = width() - 50;
-  
-  for(int i = 0; i < 10; i++) {
-    test[i]->resize(newWidth, test[i]->height());
+ 
+  for(int i = 0; i < fileWidgets.size(); i++) {
+    fileWidgets.at(i)->resize(newWidth, fileWidgets.at(i)->height());
   }
 
   frame->resize(newWidth, frame->height());

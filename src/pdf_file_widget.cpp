@@ -23,10 +23,6 @@ FileWidget::FileWidget(QWidget* parent) {
   setAcceptDrops(true);
   mainLayout = new QHBoxLayout();
 
-  for(int i = 0; i < 4; i++) {
-    addChild(tr("Child number #") + QString::number(i));
-  }
-
   setLayout(mainLayout);
 }
 
@@ -35,6 +31,7 @@ int FileWidget::getChildCount() const {
 }
 
 QSize FileWidget::sizeHint() const {
+  qDebug() << size();
   return QSize(CHILD_AREA_WIDTH*getChildCount(), CHILD_AREA_HEIGHT + 20);
 }
 
@@ -43,12 +40,22 @@ void FileWidget::addChild(QString name) {
   newchild = new PDFPageWidget();
   newchild->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   newchild->resize(CHILD_AREA_WIDTH, CHILD_AREA_HEIGHT);
-  /*newchild->setText(name);*/
-  /*newchild->setStyleSheet("QLabel { background-color : red; color : blue }");*/
 
   child.push_back(newchild);
 
   mainLayout->addWidget(newchild);
+  adjustSize();
+}
+
+void FileWidget::addChild(QImage* image) {
+  PDFPageWidget* newchild;
+  newchild = new PDFPageWidget();
+  newchild->setThumbnail(image);
+
+  child.push_back(newchild);
+  
+  mainLayout->addWidget(newchild);
+  adjustSize();
 }
 
 void FileWidget::dragEnterEvent(QDragEnterEvent* event) {
@@ -60,7 +67,11 @@ void FileWidget::dropEvent(QDropEvent* event) {
   int from  = event->mimeData()->text().toInt();
   int to    = findChildPositionInLayout(child[findClickEventChild(event->pos())]);
 
-  qDebug() << QString::number(from) + " " + QString::number(to);
+  qDebug() << "Moving " + QString::number(from) + " " + QString::number(to);
+
+  for(int i = 0; i < child.size(); i++) {
+    qDebug() << child[i]->size();
+  }
 
   mainLayout->removeWidget(child[from]);
   mainLayout->insertWidget(to, child[from]);
@@ -126,19 +137,23 @@ PDFFileWidget::PDFFileWidget(QWidget* parent) {
   adjustSize();
 }
 
+#if 0
 QSize PDFFileWidget::sizeHint() const {
   if(collapsed == true)
     return QSize(mainChild->width(), collapseButton->height());
   else
     return QSize(mainChild->width(), collapseButton->height() + mainChild->height() + 50);
 }
+#endif
 
 void PDFFileWidget::setCollapsed(bool state) {
   if(state == true) {
     collapsed = true;
+    setFixedHeight(collapseButton->height() + 80);
     scrollArea->hide();
   } else {
     collapsed = false;
+    setFixedHeight(collapseButton->height() + mainChild->height() + 50);
     scrollArea->show();
   }
 
@@ -150,5 +165,16 @@ void PDFFileWidget::collapsedButtonClick(void) {
     setCollapsed(false);
   else
     setCollapsed(true);
+}
+
+void PDFFileWidget::setDocument(Poppler::Document* document, QString filename) {
+  int numPages = document->numPages();
+  for(int i; i < numPages; i++) {
+    Poppler::Page* pdfPage = document->page(i);
+    QImage* image = new QImage();
+    *image = pdfPage->renderToImage();
+
+    mainChild->addChild(image);
+  }
 }
 

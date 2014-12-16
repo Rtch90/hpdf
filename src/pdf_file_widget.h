@@ -1,3 +1,4 @@
+#pragma once
 #include <QWidget>
 #include <QScrollArea>
 #include <QHBoxLayout>
@@ -16,6 +17,10 @@ class FileWidget : public QWidget {
 public:
   FileWidget(QWidget* parent = 0);
   QSize sizeHint() const;
+
+  void addChild(QString name);
+  void addChild(QImage* image);
+
 protected:
   void dragEnterEvent(QDragEnterEvent* event);
   void dropEvent(QDropEvent* event);
@@ -25,7 +30,6 @@ private:
 
   QHBoxLayout* mainLayout;
 
-  void addChild(QString name);
   int  findClickEventChild(QPoint pos);
   int  findChildPositionInLayout(PDFPageWidget* child);
   int  getChildCount() const;
@@ -37,10 +41,10 @@ class PDFFileWidget : public QWidget {
 
 public:
   PDFFileWidget(QWidget* parent = 0);
-  QSize sizeHint() const;
+  /*QSize sizeHint() const;*/
 
   void setAncestor(QWidget* ancestor) { this->ancestor = ancestor; }
-  void setDocument(Poppler::Document* document, QString filename) {};
+  void setDocument(Poppler::Document* document, QString filename);
 
   bool isCollapsed(void) { return collapsed; }
   void setCollapsed(bool collapsed);

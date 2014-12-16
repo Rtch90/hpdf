@@ -7,6 +7,7 @@
 #include <QFrame>
 #include <poppler-qt5.h>
 #include "pdf_page_widget.h"
+#include "pdf_file_widget.h"
 
 class QPushButton;
 class QWidget;
@@ -26,8 +27,10 @@ private:
   QVBoxLayout*  outerLayout;
 
   void paintEvent(QPaintEvent* event);
-  
+  void loadFile(QString fileName);
+
   QVector<Poppler::Document*> files;
   QVector<QString>            filenames;
+  QVector<PDFFileWidget*>     fileWidgets;
 };
 
