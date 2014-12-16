@@ -8,6 +8,7 @@
 #include <QString>
 #include <QPoint>
 #include <vector>
+#include <poppler-qt5.h>
 #include "pdf_page_widget.h"
 
 class FileWidget : public QWidget {
@@ -38,6 +39,9 @@ public:
   PDFFileWidget(QWidget* parent = 0);
   QSize sizeHint() const;
 
+  void setAncestor(QWidget* ancestor) { this->ancestor = ancestor; }
+  void setDocument(Poppler::Document* document, QString filename) {};
+
   bool isCollapsed(void) { return collapsed; }
   void setCollapsed(bool collapsed);
 
@@ -53,8 +57,9 @@ private:
   QLabel*       widgetName;
   QPushButton*  collapseButton;
   QScrollArea*  scrollArea;
+  
   FileWidget*   mainChild;
-
+  QWidget*      ancestor;
   bool          collapsed;
 };
 

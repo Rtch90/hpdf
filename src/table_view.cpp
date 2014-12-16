@@ -35,6 +35,7 @@ TableView::TableView(QWidget* parent) : QWidget(parent) {
     test[i] = new PDFFileWidget();
     /*test[i]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Ignored);*/
 
+    test[i]->setAncestor(this);
     layout->addWidget(test[i]);
   }
   /* End TODO. */
