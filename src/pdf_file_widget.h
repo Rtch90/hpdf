@@ -1,16 +1,22 @@
 #pragma once
 #include <QWidget>
-#include <QScrollArea>
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QGridLayout>
-#include <QImage>
-#include <QString>
-#include <QPoint>
 #include <vector>
 #include <poppler-qt5.h>
 #include "pdf_page_widget.h"
+
+class QImage;
+class QHBoxLayout;
+class QGridLayout;
+class QScrollArea;
+class QPushButton;
+class QLabel;
+class QString;
+class QSize;
+class QPoint;
+class QDragEnterEvent;
+class QDropEvent;
+class QMouseEvent;
+class PDFPageWidget;
 
 class FileWidget : public QWidget {
   Q_OBJECT
@@ -18,21 +24,20 @@ public:
   FileWidget(QWidget* parent = 0);
   QSize sizeHint() const;
 
-  void addChild(QString name);
-  void addChild(QImage* image);
+  void addPageWidget(QImage* image);
 
 protected:
   void dragEnterEvent(QDragEnterEvent* event);
   void dropEvent(QDropEvent* event);
   void mousePressEvent(QMouseEvent* event);
 private:
-  std::vector<PDFPageWidget*> child;
+  std::vector<PDFPageWidget*> pageWidgets;
 
   QHBoxLayout* mainLayout;
 
-  int  findClickEventChild(QPoint pos);
-  int  findChildPositionInLayout(PDFPageWidget* child);
-  int  getChildCount() const;
+  int findPageContainingClickEvent(QPoint pos);
+  int findPageWidgetInLayout(PDFPageWidget* pageWidgets);
+  int getPagesCount() const;
 };
 
 class PDFFileWidget : public QWidget {
@@ -44,7 +49,7 @@ public:
   /*QSize sizeHint() const;*/
 
   void setAncestor(QWidget* ancestor) { this->ancestor = ancestor; }
-  void setDocument(Poppler::Document* document, QString filename);
+  void setDocument(Poppler::Document* document, QString fileName);
 
   bool isCollapsed(void) { return collapsed; }
   void setCollapsed(bool collapsed);
@@ -58,11 +63,10 @@ private slots:
 private:
   QGridLayout* topLayout;
 
-  QLabel*       widgetName;
+  QLabel*       fileNameLabel;
   QPushButton*  collapseButton;
   QScrollArea*  scrollArea;
-  
-  FileWidget*   mainChild;
+  FileWidget*   fileWidget;
   QWidget*      ancestor;
   bool          collapsed;
 };
