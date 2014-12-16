@@ -3,7 +3,7 @@ QT += widgets
 TEMPLATE = app
 TARGET   = hpdf
 DEPENDPATH    += .
-INCLUDEPATH   += /usr/include/poppler/qt5
+INCLUDEPATH   += /usr/include/poppler/qt5/
 LIBS          += -L/usr/lib -lpoppler-qt5
 
 HEADERS += \

@@ -14,6 +14,7 @@
 #define CHILD_AREA_HEIGHT 180
 
 FileWidget::FileWidget(QWidget* parent) {
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   setAcceptDrops(true);
   mainLayout = new QHBoxLayout();
 

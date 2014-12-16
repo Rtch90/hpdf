@@ -6,7 +6,7 @@
 #define COLLAPSE_BUTTON_HEIGHT  40
 
 FileFrameWidget::FileFrameWidget(QWidget* parent) {
-  setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
   topLayout   = new QGridLayout();
 
