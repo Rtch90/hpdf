@@ -10,6 +10,7 @@
 class FileFrameWidget : public QWidget {
   Q_OBJECT
   Q_PROPERTY(bool collapsed READ isCollapsed WRITE setCollapsed)
+
 public:
   FileFrameWidget(QWidget* parent = 0);
   QSize sizeHint(void) const;

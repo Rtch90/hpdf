@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include <QFrame>
 #include "pdf_page_widget.h"
-#include "pdf_file.h"
 
 class QPushButton;
 class QWidget;
@@ -16,7 +15,7 @@ class TableView : public QWidget {
   Q_OBJECT
 public:
   TableView(QWidget* parent = 0);
-  QVector<PDFFile> files;
+  /*QVector<PDFFile> files;*/
 
 protected:
   

@@ -1,7 +1,6 @@
 #include <QtWidgets>
 #include <QtGlobal>
 #include "pdf_factory.h"
-#include "pdf_file.h"
 #include "table_view.h"
 #include "pdf_page_widget.h"
 
