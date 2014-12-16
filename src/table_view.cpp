@@ -3,8 +3,9 @@
 #include <assert.h>
 #include "table_view.h"
 #include "pdf_page_widget.h"
+#include "file_frame_widget.h"
 
-PDFPageWidget* test[10];
+FileFrameWidget*  test[10];
 
 TableView::TableView(QWidget* parent) : QWidget(parent) {
   outerLayout = new QVBoxLayout();
@@ -23,10 +24,17 @@ TableView::TableView(QWidget* parent) : QWidget(parent) {
    * To remove pagewidget and add filewidgets later,
    * use QVector<PDFFile> files to store files.
    */
-  for(i = 0; i < 10; i++) {
+  /*for(i = 0; i < 10; i++) {
     test[i] = new PDFPageWidget();
     test[i]->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     
+    layout->addWidget(test[i]);
+  }*/
+
+  for(i = 0; i < 10; i++) {
+    test[i] = new FileFrameWidget();
+    /*test[i]->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Ignored);*/
+
     layout->addWidget(test[i]);
   }
   /* End TODO. */
