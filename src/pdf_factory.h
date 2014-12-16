@@ -1,10 +1,12 @@
 #pragma once
 #include <QMainWindow>
+#include "table_view.h"
 
 class QAction;
 class QWidget;
 class QTabWidget;
 class QScrollArea;
+class QSplitter;
 
 class PDFFactory : public QMainWindow {
   Q_OBJECT
@@ -36,9 +38,11 @@ private:
 
   QWidget* centralWidget;
 
-  QTabWidget* ribbon;
-  QScrollArea* scrollArea;
-  QWidget* pdfTableView;
+  QTabWidget*   ribbon;
+  QScrollArea*  scrollArea;
+  TableView*    pdfTableView;
+  QSplitter*    pdfSplitter;
+  QWidget*      pdfPreview;
 
   QToolBar* fileToolBar;
   QToolBar* editToolBar;

@@ -2,6 +2,7 @@
 #include <QtGlobal>
 #include "pdf_factory.h"
 #include "pdf_file.h"
+#include "table_view.h"
 #include "pdf_page_widget.h"
 
 PDFFactory::PDFFactory(void) {
@@ -32,13 +33,19 @@ void PDFFactory::createWidgets(void) {
   layout->addWidget(ribbon);
 
   /* Create main area (table). */
-  pdfTableView = new QWidget();
-  pdfTableView->setLayout(new QVBoxLayout());
+  pdfTableView = new TableView();
+  /*pdfTableView->setLayout(new QVBoxLayout());*/
   /*pdfTableView->setMinimumSize(1000, 1000);*/
   pdfTableView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  scrollArea = new QScrollArea();
-  scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  layout->addWidget(scrollArea);
+
+  pdfSplitter = new QSplitter();
+  /* TODO: change pdfPreview widget. */
+  pdfPreview = new QWidget();
+  pdfPreview->setMinimumWidth(100);
+  pdfSplitter->setOrientation(Qt::Horizontal);
+  pdfSplitter->addWidget(pdfTableView);
+  pdfSplitter->addWidget(pdfPreview);
+  layout->addWidget(pdfSplitter);
 
   /*PDFFile* pdfFile = new PDFFile("/home/docs/loa.pdf");
   PDFPageWidget* pdfPage = new PDFPageWidget();
@@ -58,13 +65,13 @@ void PDFFactory::createActions(void) {
   connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
 
   exportAction = new QAction(tr("&Export"), this);
-  exportAction->setIcon(QIcon(":/img/save.png"));
+  exportAction->setIcon(QIcon(":/img/export.png"));
   exportAction->setShortcut(tr("Ctrl+S"));
   exportAction->setStatusTip(tr("Export the selected frame to a new PDF"));
   /*connect(saveAction, SIGNAL(triggered()), this, SLOT(save()))*/
 
   exportAllAction = new QAction(tr("Combine all and export"), this);
-  exportAllAction->setIcon(QIcon(":/img/saveas.png"));
+  exportAllAction->setIcon(QIcon(":/img/exportall.png"));
   exportAllAction->setShortcut(tr("Shift+Ctrl+S"));
   exportAllAction->setStatusTip(tr("Combine all and export as one PDF"));
   /*connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()))*/
