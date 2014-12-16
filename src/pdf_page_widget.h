@@ -1,11 +1,12 @@
 #pragma once
 #include <QWidget>
-#include <QPushButton>
-#include <QVector>
 
+class QPushButton;
 class QImage;
 class QPixmap;
 class QPaintEvent;
+class QSize;
+class QEvent;
 
 class PDFPageWidget : public QWidget {
   Q_OBJECT

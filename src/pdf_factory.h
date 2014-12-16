@@ -7,6 +7,7 @@ class QWidget;
 class QTabWidget;
 class QScrollArea;
 class QSplitter;
+class QToolBar;
 
 class PDFFactory : public QMainWindow {
   Q_OBJECT
@@ -41,7 +42,7 @@ private:
   QTabWidget*   ribbon;
   QScrollArea*  scrollArea;
   TableView*    pdfTableView;
-  QSplitter*    pdfSplitter;
+  QSplitter*    splitter;
   QWidget*      pdfPreview;
 
   QToolBar* fileToolBar;

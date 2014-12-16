@@ -1,17 +1,18 @@
 #pragma once
 #include <QWidget>
-#include <QSplitter>
-#include <QVBoxLayout>
-#include <QScrollArea>
-#include <QPushButton>
-#include <QFrame>
 #include <poppler-qt5.h>
 #include "pdf_page_widget.h"
 #include "pdf_file_widget.h"
 
 class QPushButton;
-class QWidget;
 class QScrollArea;
+class QVBoxLayout;
+class QSplitter;
+class QFrame;
+class QPaintEvent;
+class QString;
+
+class PDFFileWidget;
 
 class TableView : public QWidget {
   Q_OBJECT
@@ -30,7 +31,7 @@ private:
   void loadFile(QString fileName);
 
   QVector<Poppler::Document*> files;
-  QVector<QString>            filenames;
+  QVector<QString>            fileNames;
   QVector<PDFFileWidget*>     fileWidgets;
 };
 
