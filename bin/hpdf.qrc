@@ -7,7 +7,9 @@
         <file>../img/new.png</file>
         <file>../img/export.png</file>
         <file>../img/exportall.png</file>
-        <file>../img/pdffactory.png</file>
+        <file>../img/hpdf.png</file>
         <file>../img/about.png</file>
+        <file>../img/collapse.png</file>
+        <file>../img/expand.png</file>
     </qresource>
 </RCC>

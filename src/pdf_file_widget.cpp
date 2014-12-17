@@ -4,8 +4,8 @@
 #include "pdf_file_widget.h"
 #include "pdf_page_widget.h"
 
-#define COLLAPSE_BUTTON_WIDTH   60
-#define COLLAPSE_BUTTON_HEIGHT  40
+#define COLLAPSE_BUTTON_WIDTH   32
+#define COLLAPSE_BUTTON_HEIGHT  32
 
 #define CHILD_AREA_WIDTH        150
 #define CHILD_AREA_HEIGHT       150
@@ -81,17 +81,16 @@ int FilesContainerWidget::findPageWidgetInLayout(PDFPageWidget* pageWidget) {
 PDFFileWidget::PDFFileWidget(QWidget* parent) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-  topLayout     = new QGridLayout();
+  topLayout       = new QGridLayout();
 
-  collapseButton = new QPushButton(tr("X"));
-  collapseButton->setMinimumSize(QSize(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_HEIGHT));
-  collapseButton->setMaximumSize(QSize(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_HEIGHT));
+  collapseButton  = new QPushButton();
+  collapseButton->resize(QSize(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_HEIGHT));
+  collapseButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  collapseButton->setIcon(QIcon(":/img/collapse.png"));
   connect(collapseButton, SIGNAL(released()), this, SLOT(collapsedButtonClick()));
   topLayout->addWidget(collapseButton, 0, 0);
 
   fileNameLabel = new QLabel();
-  fileNameLabel->setText(tr("File 1"));
-
   topLayout->addWidget(fileNameLabel, 0, 1);
   
   filesContainerWidget = new FilesContainerWidget();
@@ -108,8 +107,10 @@ void PDFFileWidget::setCollapsed(bool state) {
   collapsed = state;
   if(state == true) {
     scrollArea->hide();
+    collapseButton->setIcon(QIcon(":/img/expand.png"));
   } else {
     scrollArea->show();
+    collapseButton->setIcon(QIcon(":img/collapse.png"));
   }
 }
 
@@ -121,14 +122,14 @@ void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {
   int numPages = document->numPages();
   for(int i = 0; i < numPages; i++) {
     Poppler::Page* pdfPage = document->page(i);
-  
-    QImage* pageImage = new QImage();
-    *pageImage = pdfPage->renderToImage(144, 144);
+
+    QImage pageImage = pdfPage->renderToImage(144, 144);
 
     PDFPageWidget* pageWidget = new PDFPageWidget();
     pageWidget->setThumbnail(pageImage);
 
     filesContainerWidget->addPageWidget(pageWidget);
   }
+  fileNameLabel->setText(fileName);
 }
 
