@@ -1,6 +1,7 @@
 #pragma once
 #include <QFrame>
 #include <poppler-qt5.h>
+#include "pdf_jam.h"
 
 class QImage;
 class QVBoxLayout;
@@ -16,6 +17,7 @@ public:
   void loadFile(QString fileName);
 
 protected:
+  PDFJam pdfJam;
   
 private:
   QVBoxLayout*  outerLayout;
