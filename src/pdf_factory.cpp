@@ -50,6 +50,8 @@ void PDFFactory::createWidgets(void) {
 
   connect(pdfTableView, SIGNAL(pageClicked(QMouseEvent*,QImage)), pdfPreview,
           SLOT(pageClicked(QMouseEvent*,QImage)));
+  connect(pdfTableView, SIGNAL(previewUpdate(Poppler::Page*)), pdfPreview,
+          SLOT(previewUpdate(Poppler::Page*)));
 
   setWindowIcon(QIcon(":/img/hpdf.png"));
   setWindowTitle(tr("HPDF"));

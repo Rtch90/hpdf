@@ -1,5 +1,6 @@
 #pragma once
 #include <QFrame>
+#include <poppler-qt5.h>
 
 class QWidget;
 class QPushButton;
@@ -15,6 +16,8 @@ class PDFPageWidget : public QFrame {
 public:
   PDFPageWidget(QWidget* parent = 0);
   void setThumbnail(QImage pageImage);
+  void setPopplerPage(Poppler::Page*);
+
   void setButton(QPushButton* btn);
   QSize sizeHint() const;
   /*void setButtonImage(QImage* pageImage);*/
@@ -27,12 +30,14 @@ protected:
 
 private:
   /*QVector<QPushButton> buttons;*/
-  QPushButton*  button;
-  QImage        image;
-  QPixmap       pixmap;
-  QPushButton*  btn1, *btn2;
+  QPushButton*    button;
+  QImage          image;
+  Poppler::Page*  pPage;
+  QPixmap         pixmap;
+  QPushButton*    btn1, *btn2;
 
 signals:
   void pageClicked(QMouseEvent* event, QImage pageImage);
+  void previewUpdate(Poppler::Page*);
 };
 

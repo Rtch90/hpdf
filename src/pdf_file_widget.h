@@ -75,5 +75,6 @@ private:
 signals:
   void pageClicked(QMouseEvent*, QImage);
   void pageClicked(QMouseEvent*, Poppler::Page*);
+  void previewUpdate(Poppler::Page*);
 };
 

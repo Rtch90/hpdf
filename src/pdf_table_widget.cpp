@@ -41,6 +41,8 @@ void PDFTableWidget::loadFile(QString fileName) {
   fileWidget->setDocument(doc, fileName);
   connect(fileWidget, SIGNAL(pageClicked(QMouseEvent*,QImage)), this,
           SIGNAL(pageClicked(QMouseEvent*,QImage)));
+  connect(fileWidget, SIGNAL(previewUpdate(Poppler::Page*)), this,
+          SIGNAL(previewUpdate(Poppler::Page*)));
 
   fileWidgets.append(fileWidget);
 

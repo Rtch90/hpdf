@@ -131,16 +131,22 @@ void PDFFileWidget::pageClickedHandler(QMouseEvent*, QImage) {
 
 void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {
   document->setRenderHint(Poppler::Document::TextAntialiasing);
+  Poppler::Document* doc = Poppler::Document::load(fileName);
+  doc->setRenderHint(Poppler::Document::TextAntialiasing);
+
   int numPages = document->numPages();
   for(int i = 0; i < numPages; i++) {
     Poppler::Page* pdfPage = document->page(i);
 
     PDFPageWidget* pageWidget = new PDFPageWidget();
-    
+  
+    pageWidget->setPopplerPage(doc->page(i));
     tgen.render(pageWidget, pdfPage);
 
     connect(pageWidget, SIGNAL(pageClicked(QMouseEvent*,QImage)), this,
             SIGNAL(pageClicked(QMouseEvent*,QImage)));
+    connect(pageWidget, SIGNAL(previewUpdate(Poppler::Page*)), this,
+            SIGNAL(previewUpdate(Poppler::Page*)));
 
     pagesContainerWidget->addPageWidget(pageWidget);
     /* Process event. */
