@@ -10,7 +10,7 @@
 #define CHILD_AREA_WIDTH        150
 #define CHILD_AREA_HEIGHT       150
 
-FileWidget::FileWidget(QWidget* parent) {
+FilesContainerWidget::FilesContainerWidget(QWidget* parent) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   setAcceptDrops(true);
   mainLayout = new QHBoxLayout();
@@ -18,31 +18,26 @@ FileWidget::FileWidget(QWidget* parent) {
   setLayout(mainLayout);
 }
 
-int FileWidget::getPagesCount() const {
+int FilesContainerWidget::getPagesCount() const {
   return pageWidgets.size();
 }
 
-QSize FileWidget::sizeHint() const {
+QSize FilesContainerWidget::sizeHint() const {
   return QSize(CHILD_AREA_WIDTH*getPagesCount(), CHILD_AREA_HEIGHT + 20);
 }
 
-void FileWidget::addPageWidget(QImage* image) {
-  PDFPageWidget* newPageWidget;
-  newPageWidget = new PDFPageWidget();
-  newPageWidget->setThumbnail(image);
-  
-  pageWidgets.push_back(newPageWidget);
-
-  mainLayout->addWidget(newPageWidget);
+void FilesContainerWidget::addPageWidget(PDFPageWidget* pageWidget) {
+  pageWidgets.append(pageWidget);
+  mainLayout->addWidget(pageWidget);
   adjustSize();
 }
 
-void FileWidget::dragEnterEvent(QDragEnterEvent* event) {
+void FilesContainerWidget::dragEnterEvent(QDragEnterEvent* event) {
   if(event->mimeData()->hasFormat("text/plain"))
     event->acceptProposedAction();
 }
 
-void FileWidget::dropEvent(QDropEvent* event) {
+void FilesContainerWidget::dropEvent(QDropEvent* event) {
   int from  = event->mimeData()->text().toInt();
   int to    = findPageWidgetInLayout(pageWidgets[findPageContainingClickEvent(event->pos())]);
 
@@ -52,7 +47,7 @@ void FileWidget::dropEvent(QDropEvent* event) {
   event->acceptProposedAction();
 }
 
-void FileWidget::mousePressEvent(QMouseEvent* event) {
+void FilesContainerWidget::mousePressEvent(QMouseEvent* event) {
   if(event->button() == Qt::LeftButton) {
     int draggedChild = (findPageContainingClickEvent(event->pos()));
 
@@ -67,7 +62,7 @@ void FileWidget::mousePressEvent(QMouseEvent* event) {
   }
 }
 
-int FileWidget::findPageContainingClickEvent(QPoint pos) {
+int FilesContainerWidget::findPageContainingClickEvent(QPoint pos) {
   for(int i = 0; i < getPagesCount(); i++)
     if(pageWidgets[i]->geometry().contains(pos))
       return i;
@@ -75,7 +70,7 @@ int FileWidget::findPageContainingClickEvent(QPoint pos) {
   return getPagesCount()-1;
 }
 
-int FileWidget::findPageWidgetInLayout(PDFPageWidget* pageWidget) {
+int FilesContainerWidget::findPageWidgetInLayout(PDFPageWidget* pageWidget) {
   for(int i = 0; i < getPagesCount(); i++)
     if(mainLayout->itemAt(i)->widget() == pageWidget)
       return i;
@@ -88,66 +83,52 @@ PDFFileWidget::PDFFileWidget(QWidget* parent) {
 
   topLayout     = new QGridLayout();
 
-  scrollArea    = new QScrollArea();
-  fileWidget    = new FileWidget();
-  scrollArea->setWidget(fileWidget);
-
-  fileNameLabel = new QLabel();
-  fileNameLabel->setText(tr("File 1"));
-
-  topLayout->addWidget(fileNameLabel, 0, 1);
-  
   collapseButton = new QPushButton(tr("X"));
   collapseButton->setMinimumSize(QSize(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_HEIGHT));
   collapseButton->setMaximumSize(QSize(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_HEIGHT));
   connect(collapseButton, SIGNAL(released()), this, SLOT(collapsedButtonClick()));
   topLayout->addWidget(collapseButton, 0, 0);
 
+  fileNameLabel = new QLabel();
+  fileNameLabel->setText(tr("File 1"));
+
+  topLayout->addWidget(fileNameLabel, 0, 1);
+  
+  filesContainerWidget = new FilesContainerWidget();
+  scrollArea = new QScrollArea();
+  scrollArea->setWidget(filesContainerWidget);
   topLayout->addWidget(scrollArea, 1, 0, 1, 5);
+
   setLayout(topLayout);
 
   setCollapsed(false);
-  adjustSize();
 }
-
-#if 0
-QSize PDFFileWidget::sizeHint() const {
-  if(collapsed == true)
-    return QSize(mainChild->width(), collapseButton->height());
-  else
-    return QSize(mainChild->width(), collapseButton->height() + mainChild->height() + 50);
-}
-#endif
 
 void PDFFileWidget::setCollapsed(bool state) {
+  collapsed = state;
   if(state == true) {
-    collapsed = true;
-    setFixedHeight(collapseButton->height() + 80);
     scrollArea->hide();
   } else {
-    collapsed = false;
-    setFixedHeight(collapseButton->height() + fileWidget->height() + 50);
     scrollArea->show();
   }
-
-  adjustSize();
 }
 
 void PDFFileWidget::collapsedButtonClick(void) {
-  if(collapsed == true)
-    setCollapsed(false);
-  else
-    setCollapsed(true);
+  setCollapsed(!collapsed);
 }
 
 void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {
   int numPages = document->numPages();
-  for(int i; i < numPages; i++) {
+  for(int i = 0; i < numPages; i++) {
     Poppler::Page* pdfPage = document->page(i);
-    QImage* image = new QImage();
-    *image = pdfPage->renderToImage(144, 144);
+  
+    QImage* pageImage = new QImage();
+    *pageImage = pdfPage->renderToImage(144, 144);
 
-    fileWidget->addPageWidget(image);
+    PDFPageWidget* pageWidget = new PDFPageWidget();
+    pageWidget->setThumbnail(pageImage);
+
+    filesContainerWidget->addPageWidget(pageWidget);
   }
 }
 

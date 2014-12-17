@@ -1,7 +1,7 @@
 #include <QtWidgets>
 #include <QtGlobal>
 #include "pdf_factory.h"
-#include "table_view.h"
+#include "pdf_table_view.h"
 #include "pdf_page_widget.h"
 
 PDFFactory::PDFFactory(void) {
@@ -32,7 +32,7 @@ void PDFFactory::createWidgets(void) {
   layout->addWidget(ribbon);
 
   /* Create main area (table). */
-  pdfTableView = new TableView();
+  pdfTableView = new PDFTableView();
   pdfTableView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   splitter = new QSplitter();
@@ -43,8 +43,10 @@ void PDFFactory::createWidgets(void) {
   splitter->addWidget(pdfTableView);
   splitter->addWidget(pdfPreview);
   QList<int> splitterWidgetSizes;
-  splitterWidgetSizes << 700 << 300;
+  splitterWidgetSizes << 600 << 400;
   splitter->setSizes(splitterWidgetSizes);
+  splitter->setStretchFactor(0, 1);
+  splitter->setStretchFactor(1, 0.5);
   layout->addWidget(splitter);
 
   setWindowIcon(QIcon(":/img/hpdf.png"));

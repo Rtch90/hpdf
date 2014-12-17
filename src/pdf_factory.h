@@ -1,6 +1,6 @@
 #pragma once
 #include <QMainWindow>
-#include "table_view.h"
+#include "pdf_table_view.h"
 
 class QAction;
 class QWidget;
@@ -41,7 +41,7 @@ private:
 
   QTabWidget*   ribbon;
   QScrollArea*  scrollArea;
-  TableView*    pdfTableView;
+  PDFTableView* pdfTableView;
   QSplitter*    splitter;
   QWidget*      pdfPreview;
 
