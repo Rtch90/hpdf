@@ -2,10 +2,11 @@
 #include <QFrame>
 #include <poppler-qt5.h>
 
+class QImage;
 class QVBoxLayout;
 class QString;
 class QScrollArea;
-
+class QMouseEvent;
 class PDFFileWidget;
 
 class PDFTableWidget : public QFrame {
@@ -26,5 +27,8 @@ private:
   QVector<Poppler::Document*> files;
   QVector<QString>            fileNames;
   QVector<PDFFileWidget*>     fileWidgets;
+
+signals:
+  void pageClicked(QMouseEvent*, QImage);
 };
 

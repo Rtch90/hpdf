@@ -10,7 +10,7 @@
 #define CHILD_AREA_WIDTH        150
 #define CHILD_AREA_HEIGHT       150
 
-FilesContainerWidget::FilesContainerWidget(QWidget* parent) {
+PagesContainerWidget::PagesContainerWidget(QWidget* parent) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   setAcceptDrops(true);
   mainLayout = new QHBoxLayout();
@@ -18,26 +18,26 @@ FilesContainerWidget::FilesContainerWidget(QWidget* parent) {
   setLayout(mainLayout);
 }
 
-int FilesContainerWidget::getPagesCount() const {
+int PagesContainerWidget::getPagesCount() const {
   return pageWidgets.size();
 }
 
-QSize FilesContainerWidget::sizeHint() const {
+QSize PagesContainerWidget::sizeHint() const {
   return QSize(CHILD_AREA_WIDTH*getPagesCount(), CHILD_AREA_HEIGHT + 20);
 }
 
-void FilesContainerWidget::addPageWidget(PDFPageWidget* pageWidget) {
+void PagesContainerWidget::addPageWidget(PDFPageWidget* pageWidget) {
   pageWidgets.append(pageWidget);
   mainLayout->addWidget(pageWidget);
   adjustSize();
 }
 
-void FilesContainerWidget::dragEnterEvent(QDragEnterEvent* event) {
+void PagesContainerWidget::dragEnterEvent(QDragEnterEvent* event) {
   if(event->mimeData()->hasFormat("text/plain"))
     event->acceptProposedAction();
 }
 
-void FilesContainerWidget::dropEvent(QDropEvent* event) {
+void PagesContainerWidget::dropEvent(QDropEvent* event) {
   int from  = event->mimeData()->text().toInt();
   int to    = findPageWidgetInLayout(pageWidgets[findPageContainingClickEvent(event->pos())]);
 
@@ -47,7 +47,7 @@ void FilesContainerWidget::dropEvent(QDropEvent* event) {
   event->acceptProposedAction();
 }
 
-void FilesContainerWidget::mousePressEvent(QMouseEvent* event) {
+void PagesContainerWidget::mousePressEvent(QMouseEvent* event) {
   if(event->button() == Qt::LeftButton) {
     int draggedChild = (findPageContainingClickEvent(event->pos()));
 
@@ -62,7 +62,7 @@ void FilesContainerWidget::mousePressEvent(QMouseEvent* event) {
   }
 }
 
-int FilesContainerWidget::findPageContainingClickEvent(QPoint pos) {
+int PagesContainerWidget::findPageContainingClickEvent(QPoint pos) {
   for(int i = 0; i < getPagesCount(); i++)
     if(pageWidgets[i]->geometry().contains(pos))
       return i;
@@ -70,7 +70,7 @@ int FilesContainerWidget::findPageContainingClickEvent(QPoint pos) {
   return getPagesCount()-1;
 }
 
-int FilesContainerWidget::findPageWidgetInLayout(PDFPageWidget* pageWidget) {
+int PagesContainerWidget::findPageWidgetInLayout(PDFPageWidget* pageWidget) {
   for(int i = 0; i < getPagesCount(); i++)
     if(mainLayout->itemAt(i)->widget() == pageWidget)
       return i;
@@ -93,9 +93,9 @@ PDFFileWidget::PDFFileWidget(QWidget* parent) {
   fileNameLabel = new QLabel();
   topLayout->addWidget(fileNameLabel, 0, 1);
   
-  filesContainerWidget = new FilesContainerWidget();
+  pagesContainerWidget = new PagesContainerWidget();
   scrollArea = new QScrollArea();
-  scrollArea->setWidget(filesContainerWidget);
+  scrollArea->setWidget(pagesContainerWidget);
   topLayout->addWidget(scrollArea, 1, 0, 1, 5);
 
   setLayout(topLayout);
@@ -127,8 +127,10 @@ void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {
 
     PDFPageWidget* pageWidget = new PDFPageWidget();
     pageWidget->setThumbnail(pageImage);
+    connect(pageWidget, SIGNAL(pageClicked(QMouseEvent*,QImage)), this,
+            SIGNAL(pageClicked(QMouseEvent*,QImage)));
 
-    filesContainerWidget->addPageWidget(pageWidget);
+    pagesContainerWidget->addPageWidget(pageWidget);
   }
   fileNameLabel->setText(fileName);
 }

@@ -52,6 +52,10 @@ void PDFPageWidget::setThumbnail(QImage pageImage) {
   update();
 }
 
+void PDFPageWidget::mousePressEvent(QMouseEvent* event) {
+  emit pageClicked(event, image);
+}
+
 void PDFPageWidget::leaveEvent(QEvent* event) {
  btn1->hide();
  btn2->hide();

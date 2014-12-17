@@ -39,6 +39,8 @@ void PDFTableWidget::loadFile(QString fileName) {
   PDFFileWidget* fileWidget = new PDFFileWidget();
   fileWidget->setAncestor(this);
   fileWidget->setDocument(doc, fileName);
+  connect(fileWidget, SIGNAL(pageClicked(QMouseEvent*,QImage)), this,
+          SIGNAL(pageClicked(QMouseEvent*,QImage)));
 
   fileWidgets.append(fileWidget);
 
