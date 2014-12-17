@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <poppler-qt5.h>
 #include "pdf_page_widget.h"
+#include "thumbgen.h"
 
 class QImage;
 class QHBoxLayout;
@@ -16,6 +17,7 @@ class QDragEnterEvent;
 class QDropEvent;
 class QMouseEvent;
 class PDFPageWidget;
+class ThumbGen;
 
 class PagesContainerWidget : public QWidget {
   Q_OBJECT
@@ -56,9 +58,12 @@ protected:
 
 private slots:
   void collapsedButtonClick();
+  void pageClickedHandler(QMouseEvent*, QImage);
+  void updateThumbnail(QImage, PDFPageWidget*);
 
 private:
-  QGridLayout* topLayout;
+  ThumbGen                tgen;
+  QGridLayout*            topLayout;
 
   QLabel*                 fileNameLabel;
   QPushButton*            collapseButton;
@@ -69,5 +74,6 @@ private:
 
 signals:
   void pageClicked(QMouseEvent*, QImage);
+  void pageClicked(QMouseEvent*, Poppler::Page*);
 };
 
