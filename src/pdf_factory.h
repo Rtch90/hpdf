@@ -1,6 +1,6 @@
 #pragma once
 #include <QMainWindow>
-#include "pdf_table_view.h"
+#include "pdf_table_widget.h"
 
 class QAction;
 class QWidget;
@@ -18,8 +18,8 @@ protected:
   /*void closeEvent(QCloseEvent* event);*/
 
 private slots:
-  /*void openFile(void);
-  void exportFile(void);
+  void openFile(void);
+  /*void exportFile(void);
   void exportAllFiles(void);*/
 
 private:
@@ -39,11 +39,11 @@ private:
 
   QWidget* centralWidget;
 
-  QTabWidget*   ribbon;
-  QScrollArea*  scrollArea;
-  PDFTableView* pdfTableView;
-  QSplitter*    splitter;
-  QWidget*      pdfPreview;
+  QTabWidget*     ribbon;
+  QScrollArea*    scrollArea;
+  PDFTableWidget* pdfTableView;
+  QSplitter*      splitter;
+  QWidget*        pdfPreview;
 
   QToolBar* fileToolBar;
   QToolBar* editToolBar;

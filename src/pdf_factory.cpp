@@ -1,7 +1,7 @@
 #include <QtWidgets>
 #include <QtGlobal>
 #include "pdf_factory.h"
-#include "pdf_table_view.h"
+#include "pdf_table_widget.h"
 #include "pdf_page_widget.h"
 
 PDFFactory::PDFFactory(void) {
@@ -32,8 +32,7 @@ void PDFFactory::createWidgets(void) {
   layout->addWidget(ribbon);
 
   /* Create main area (table). */
-  pdfTableView = new PDFTableView();
-  pdfTableView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  pdfTableView = new PDFTableWidget();
 
   splitter = new QSplitter();
   /* TODO: change pdfPreview widget. */
@@ -43,7 +42,7 @@ void PDFFactory::createWidgets(void) {
   splitter->addWidget(pdfTableView);
   splitter->addWidget(pdfPreview);
   QList<int> splitterWidgetSizes;
-  splitterWidgetSizes << 600 << 400;
+  splitterWidgetSizes << 900 << 400;
   splitter->setSizes(splitterWidgetSizes);
   splitter->setStretchFactor(0, 1);
   splitter->setStretchFactor(1, 0.5);
@@ -51,7 +50,7 @@ void PDFFactory::createWidgets(void) {
 
   setWindowIcon(QIcon(":/img/hpdf.png"));
   setWindowTitle(tr("HPDF"));
-  setGeometry(0, 0, 1000, 650);
+  setGeometry(0, 0, 1300, 650);
 }
 
 void PDFFactory::createActions(void) {
@@ -59,7 +58,7 @@ void PDFFactory::createActions(void) {
   openAction->setIcon(QIcon(":/img/open.png"));
   openAction->setShortcut(tr("Ctrl+O"));
   openAction->setStatusTip(tr("Open a PDF"));
-  connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
+  connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
 
   exportAction = new QAction(tr("&Export"), this);
   exportAction->setIcon(QIcon(":/img/export.png"));
@@ -136,5 +135,18 @@ void PDFFactory::createRibbon(void) {
 
 void PDFFactory::createStatusBar(void) {
   statusBar()->showMessage(tr(""));
+}
+
+void PDFFactory::openFile() {
+  QStringList fileNames = QFileDialog::getOpenFileNames(this,
+      tr("Open PDF file"), ".",
+      tr("PDF file (*.pdf)"));
+
+  for(int i = 0; i < fileNames.size(); i++) {
+    QString fileName = fileNames.at(i);
+    if(!fileName.isEmpty()) {
+        pdfTableView->loadFile(fileName);
+    }
+  }
 }
 
