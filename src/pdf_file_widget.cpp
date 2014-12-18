@@ -10,11 +10,11 @@
 #define CHILD_AREA_WIDTH        150
 #define CHILD_AREA_HEIGHT       150
 
-#define CHILD_AREA_SIDE_MARGIN  6
+#define CHILD_AREA_SIDE_MARGIN  20
 
 PagesContainerWidget::PagesContainerWidget(QWidget* parent) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  /*setAcceptDrops(true);*/
+  setAcceptDrops(true);
   mainLayout = new QHBoxLayout();
 
   setLayout(mainLayout);
@@ -39,38 +39,10 @@ void PagesContainerWidget::dragEnterEvent(QDragEnterEvent* event) {
 }
 
 void PagesContainerWidget::dropEvent(QDropEvent* event) {
+  QPoint pos = event->pos();
+  qDebug() << "FILE DROP";
+  qDebug() << (pos.x() / (CHILD_AREA_SIDE_MARGIN + CHILD_AREA_WIDTH));
   event->acceptProposedAction();
-}
-
-void PagesContainerWidget::mousePressEvent(QMouseEvent* event) {
-  if(event->button() == Qt::LeftButton) {
-    int draggedChild = (findPageContainingClickEvent(event->pos()));
-
-    QDrag* drag = new QDrag(this);
-    QMimeData* mimeData = new QMimeData;
-
-    mimeData->setText(QString::number(draggedChild));
-    drag->setMimeData(mimeData);
-    drag->setPixmap(QPixmap(":/img/copy.png"));
-
-    Qt::DropAction dropAction = drag->exec();
-  }
-}
-
-int PagesContainerWidget::findPageContainingClickEvent(QPoint pos) {
-  for(int i = 0; i < getPagesCount(); i++)
-    if(pageWidgets[i]->geometry().contains(pos))
-      return i;
-  
-  return getPagesCount()-1;
-}
-
-int PagesContainerWidget::findPageWidgetInLayout(PDFPageWidget* pageWidget) {
-  for(int i = 0; i < getPagesCount(); i++)
-    if(mainLayout->itemAt(i)->widget() == pageWidget)
-      return i;
-
-  return getPagesCount()-1;
 }
 
 PDFFileWidget::PDFFileWidget(QWidget* parent) {
@@ -141,8 +113,6 @@ void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {
     tgen.render(pageWidget, pdfPage);
 
     pagesContainerWidget->addPageWidget(pageWidget);
-    /* Process event. */
-    /*qApp->processEvents();*/
   }
   tgen.start();
   fileNameLabel->setText(fileName);

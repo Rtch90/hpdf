@@ -32,11 +32,8 @@ public:
 protected:
   void dragEnterEvent(QDragEnterEvent* event);
   void dropEvent(QDropEvent* event);
-  void mousePressEvent(QMouseEvent* event);
 
 private:
-  int findPageContainingClickEvent(QPoint pos);
-  int findPageWidgetInLayout(PDFPageWidget* pageWidgets);
   int getPagesCount() const;
 };
 

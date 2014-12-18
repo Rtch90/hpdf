@@ -12,8 +12,8 @@ PDFJam::PDFJam(void) {
 void PDFJam::makeFolder(QString path) {
   QString tmp = "mksir -p %1 && rm %2*";
   int value = system(tmp.arg(path).arg(path).toStdString().c_str());
-  if(value != 0)
-    qDebug() << "ERROR: Failed to make " << path;
+  /*if(value != 0)
+    qDebug() << "ERROR: Failed to make " << path;*/
 }
 
 void PDFJam::pushCommand(QString cmd) {
@@ -53,10 +53,10 @@ void PDFJam::run(void) {
   while(!isQueueEmpty()) {
     QString cmd = nextCommand();
     int value = system(cmd.toStdString().c_str());
-    if(value != 0)
+    /*if(value != 0)
       qDebug() << "ERROR: Failed to execute " << cmd;
     else
-      qDebug() << "SUCCESS: executed " << cmd;
+      qDebug() << "SUCCESS: executed " << cmd;*/
   }
 
   /*system("echo 'tata' > /tmp/test.txt");*/

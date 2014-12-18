@@ -51,6 +51,8 @@ void PDFTableWidget::loadFile(QString fileName) {
 void PDFTableWidget::registerPage(PDFPageWidget* child) {
   /* Need new name? */
   QString name = QString("/home/pdfpage").append(QString::number(pageChilds.size()));
+  qDebug() << "Registering name:";
+  qDebug() << name;
   pageChilds[name] = child;
   child->registerName(name);
 }
