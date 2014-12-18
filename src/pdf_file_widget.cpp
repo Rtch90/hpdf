@@ -58,12 +58,20 @@ PDFFileWidget::PDFFileWidget(QWidget* parent) :QFrame(parent) {
   topLayout->addWidget(collapseButton, 0, 0);
 
   fileNameLabel = new QLabel();
+  fileNameLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   topLayout->addWidget(fileNameLabel, 0, 1);
+
+  removeButton = new QPushButton();
+  removeButton->resize(QSize(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_HEIGHT));
+  removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+  removeButton->setIcon(QIcon(":img/remove.png"));
+  /*connect(collapseButton, SIGNAL(released()), this, SLOT(collapsedButtonClick()));*/
+  topLayout->addWidget(removeButton, 0, 2);
   
   pagesContainerWidget = new PagesContainerWidget();
   scrollArea = new QScrollArea();
   scrollArea->setWidget(pagesContainerWidget);
-  topLayout->addWidget(scrollArea, 1, 0, 1, 5);
+  topLayout->addWidget(scrollArea, 1, 0, 1, 3);
 
   setLayout(topLayout);
 

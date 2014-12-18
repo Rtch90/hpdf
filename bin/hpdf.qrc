@@ -11,5 +11,6 @@
         <file>../img/about.png</file>
         <file>../img/collapse.png</file>
         <file>../img/expand.png</file>
+        <file>../img/remove.png</file>
     </qresource>
 </RCC>

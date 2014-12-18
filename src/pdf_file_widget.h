@@ -70,6 +70,7 @@ private:
 
   QLabel*                 fileNameLabel;
   QPushButton*            collapseButton;
+  QPushButton*            removeButton;
   PagesContainerWidget*   pagesContainerWidget;
   QScrollArea*            scrollArea;
   QWidget*                ancestor;
