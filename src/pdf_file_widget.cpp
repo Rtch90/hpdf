@@ -24,7 +24,7 @@ int PagesContainerWidget::getPagesCount() const {
 }
 
 QSize PagesContainerWidget::sizeHint() const {
-  return QSize((CHILD_AREA_SIDE_MARGIN + CHILD_AREA_WIDTH)*getPagesCount(), CHILD_AREA_HEIGHT + 22);
+  return QSize((CHILD_AREA_SIDE_MARGIN + CHILD_AREA_WIDTH)*getPagesCount(), CHILD_AREA_HEIGHT + 30);
 }
 
 void PagesContainerWidget::addPageWidget(PDFPageWidget* pageWidget) {
@@ -54,7 +54,7 @@ PDFFileWidget::PDFFileWidget(QWidget* parent) :QFrame(parent) {
   collapseButton->resize(QSize(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_HEIGHT));
   collapseButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   collapseButton->setIcon(QIcon(":/img/collapse.png"));
-  connect(collapseButton, SIGNAL(released()), this, SLOT(collapsedButtonClick()));
+  connect(collapseButton, SIGNAL(released()), this, SLOT(collapsedButtonClicked()));
   topLayout->addWidget(collapseButton, 0, 0);
 
   fileNameLabel = new QLabel();
@@ -65,14 +65,16 @@ PDFFileWidget::PDFFileWidget(QWidget* parent) :QFrame(parent) {
   removeButton->resize(QSize(COLLAPSE_BUTTON_WIDTH, COLLAPSE_BUTTON_HEIGHT));
   removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   removeButton->setIcon(QIcon(":img/remove.png"));
-  /*connect(collapseButton, SIGNAL(released()), this, SLOT(collapsedButtonClick()));*/
+  connect(collapseButton, SIGNAL(released()), this, SLOT(collapsedButtonClicked()));
   topLayout->addWidget(removeButton, 0, 2);
   
   pagesContainerWidget = new PagesContainerWidget();
   scrollArea = new QScrollArea();
   scrollArea->setWidget(pagesContainerWidget);
+  scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   topLayout->addWidget(scrollArea, 1, 0, 1, 3);
 
+  topLayout->setContentsMargins(6, 10, 6, 10);
   setLayout(topLayout);
 
   setCollapsed(false);
@@ -128,8 +130,12 @@ void PDFFileWidget::setCollapsed(bool state) {
   }
 }
 
-void PDFFileWidget::collapsedButtonClick(void) {
+void PDFFileWidget::collapsedButtonClicked(void) {
   setCollapsed(!collapsed);
+}
+
+void PDFFileWidget::removeButtonClicked(void) {
+  emit fileRemoveButtonClicked(this);
 }
 
 void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {

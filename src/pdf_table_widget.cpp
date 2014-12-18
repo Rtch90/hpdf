@@ -19,6 +19,7 @@ PDFTableWidget::PDFTableWidget(QWidget* parent) : QFrame(parent) {
   scrollArea->setFrameStyle(QFrame::Plain);
 
   containerLayout = new QVBoxLayout();
+  containerLayout->setSpacing(10);
   containerWidget = new QWidget();
   containerWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   QWidget* spacer = new QWidget();
@@ -47,6 +48,8 @@ void PDFTableWidget::loadFile(QString fileName) {
   fileNames.append(fileName);
 
   containerLayout->insertWidget(containerLayout->count()-1, fileWidget);
+  connect(fileWidget, SIGNAL(fileRemoveButtonClicked(PDFFileWidget*)), this,
+          SLOT(fileRemoveButtonClicked(PDFFileWidget*)));
 }
 
 void PDFTableWidget::registerPage(PDFPageWidget* child) {
@@ -81,6 +84,23 @@ void PDFTableWidget::fileClicked(PDFFileWidget* sender, QMouseEvent* event) {
       }
     }
   }
+}
+
+void PDFTableWidget::fileRemoveButtonClicked(PDFFileWidget* sender) {
+  selectedFiles.remove(selectedFiles.indexOf(sender));
+
+  QVector<int> pagesToRemove;
+  for(int i = 0; i < selectedPages.size(); i++) {
+    if(selectedPages.at(i)->getFather() == sender) {
+      pagesToRemove.append(i);
+    }
+  }
+  
+  for(int i = 0; i < pagesToRemove.size(); i++) {
+    selectedPages.remove(pagesToRemove.at(i));
+  }
+
+  /* Handle remove file here. */
 }
 
 void PDFTableWidget::pageClicked(PDFPageWidget* sender, QMouseEvent* event, QString path) {

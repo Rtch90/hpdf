@@ -35,8 +35,7 @@ void PDFPreviewWidget::pageClicked(QMouseEvent* mouseEvent, QImage image) {
 }
 
 void PDFPreviewWidget::resizeEvent(QResizeEvent* event) {
-  if(pPage != NULL)
-    regenImage();
+  if(pPage != NULL) regenImage();
 }
 
 void PDFPreviewWidget::paintEvent(QPaintEvent* event) {

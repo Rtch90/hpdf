@@ -61,7 +61,8 @@ protected:
   void paintEvent(QPaintEvent* event);
 
 private slots:
-  void collapsedButtonClick();
+  void removeButtonClicked(void);
+  void collapsedButtonClicked(void);
   void updateThumbnail(QImage, PDFPageWidget*);
 
 private:
@@ -78,6 +79,7 @@ private:
   bool                    selected;
 
 signals:
+  void fileRemoveButtonClicked(PDFFileWidget*);
   void fileClicked(PDFFileWidget*, QMouseEvent*);
 };
 
