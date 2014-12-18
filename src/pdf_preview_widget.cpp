@@ -1,7 +1,6 @@
 #include <QtWidgets>
 #include "pdf_preview_widget.h"
 
-int test;
 PDFPreviewWidget::PDFPreviewWidget(QWidget* parent) : QWidget(parent) {
   pPage = NULL;
 }
@@ -25,13 +24,8 @@ void PDFPreviewWidget::regenImage(void) {
 
 void PDFPreviewWidget::previewUpdate(Poppler::Page* pp) {
   pPage = pp;
-  qDebug() << "Set new popler page" << pp;
   regenImage();
   update();
-}
-
-void PDFPreviewWidget::pageClicked(QMouseEvent* mouseEvent, QImage image) {
-  /*setImage(image);*/
 }
 
 void PDFPreviewWidget::resizeEvent(QResizeEvent* event) {
