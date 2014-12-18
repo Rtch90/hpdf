@@ -36,6 +36,8 @@ private:
   QPixmap         pixmap;
   QPushButton*    btn1, *btn2;
 
+  bool selected = false;
+
 signals:
   void pageClicked(QMouseEvent* event, QImage pageImage);
   void previewUpdate(Poppler::Page*);

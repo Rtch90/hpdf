@@ -9,6 +9,7 @@ PDFPageWidget::PDFPageWidget(QWidget* parent) :
   this->resize(150, 150);
   this->setMinimumSize(150, 150);
   this->setMinimumSize(150, 150);
+  this->setAutoFillBackground(true);
 
   this->setMouseTracking(true);
   this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -51,7 +52,7 @@ void PDFPageWidget::setPopplerPage(Poppler::Page* pp) {
 void PDFPageWidget::setThumbnail(QImage pageImage) {
   image = pageImage;
   pixmap = QPixmap::fromImage(image);
-  pixmap = pixmap.scaled(size(), Qt::KeepAspectRatio);
+  pixmap = pixmap.scaled(size() - QSize(6, 6), Qt::KeepAspectRatio);
 
   update();
 }
@@ -60,20 +61,35 @@ void PDFPageWidget::mousePressEvent(QMouseEvent* event) {
   if(pPage != NULL) {
     emit pageClicked(event, image);
     emit previewUpdate(pPage);
+
+    selected = !selected;
+    update();
   }
 }
 
 void PDFPageWidget::leaveEvent(QEvent* event) {
  btn1->hide();
  btn2->hide();
+
+ this->setFrameStyle(QFrame::Plain);
 }
 
 void PDFPageWidget::enterEvent(QEvent* event) {
   btn1->show();
   btn2->show();
+  
+  this->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 }
 
 void PDFPageWidget::paintEvent(QPaintEvent* event) {
+  QPalette palette = this->palette();
+  if(selected)
+    palette.setColor(backgroundRole(), palette.color(QPalette::Highlight));
+  else
+    palette.setColor(backgroundRole(), palette.color(QPalette::AlternateBase));
+  this->setPalette(palette);
+
+  QFrame::paintEvent(event);
   QPainter painter(this);
   painter.drawPixmap(QRect((size().width() - pixmap.width()) / 2,
                      (size().height() - pixmap.height()) / 2,
