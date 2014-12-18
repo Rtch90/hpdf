@@ -26,6 +26,9 @@ public:
   QWidget* getFather() { return father; }
   void registerName(QString name) { path = name; }
 
+  void setSelected(bool select);
+  bool isSelected(void) { return selected; }
+
 protected:
   void paintEvent(QPaintEvent* event);
   void enterEvent(QEvent* event);
@@ -49,8 +52,8 @@ private:
   bool            selected;
 
 signals:
-  void pageClicked(QMouseEvent* event, QString path);
+  void pageClicked(PDFPageWidget* sender, QMouseEvent* event, QString);
+  void pageDropped(PDFPageWidget* sender, QDropEvent* event, QString, QString);
   void previewUpdate(Poppler::Page*);
-  void droppedPage(QString, QString);
 };
 

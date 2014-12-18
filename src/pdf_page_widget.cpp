@@ -12,7 +12,7 @@ PDFPageWidget::PDFPageWidget(QWidget* parent) :
   /* Resize widget. */
   this->resize(150, 150);
   this->setMinimumSize(150, 150);
-  this->setMinimumSize(150, 150);
+  this->setMaximumSize(150, 150);
   this->setAutoFillBackground(true);
 
   this->setMouseTracking(true);
@@ -44,25 +44,16 @@ PDFPageWidget::PDFPageWidget(QWidget* parent) :
   this->setLayout(vbox);
 }
 
-void PDFPageWidget::dragEnterEvent(QDragEnterEvent* event) {
-  event->acceptProposedAction();
-}
-
-void PDFPageWidget::dropEvent(QDropEvent* event) {
-  emit droppedPage(event->mimeData()->text(), path);
-  event->acceptProposedAction();
-}
-
 void PDFPageWidget::setAncestor(QWidget* ancestor) {
   this->ancestor = ancestor;
   ((PDFTableWidget*)ancestor)->registerPage(this);
-  connect(this, SIGNAL(pageClicked(QMouseEvent*,QString)), ancestor,
-          SLOT(pageClicked(QMouseEvent*,QString)));
-
   connect(this, SIGNAL(previewUpdate(Poppler::Page*)), ancestor,
           SIGNAL(previewUpdate(Poppler::Page*)));
-  connect(this, SIGNAL(droppedPage(QString, QString)), ancestor,
-          SLOT(droppedPage(QString,QString)));
+
+  connect(this, SIGNAL(pageClicked(PDFPageWidget*, QMouseEvent*, QString)),
+          ancestor, SLOT(pageClicked(PDFPageWidget*, QMouseEvent*, QString)));
+  connect(this, SIGNAL(pageDropped(PDFPageWidget*, QDropEvent*, QString,QString)),
+          ancestor, SLOT(pageDropped(PDFPageWidget*, QDropEvent*, QString,QString)));
 }
 
 void PDFPageWidget::setFather(QWidget* father) {
@@ -86,14 +77,28 @@ void PDFPageWidget::setThumbnail(QImage pageImage) {
   update();
 }
 
+void PDFPageWidget::setSelected(bool select) {
+  selected = select;
+  update();
+}
+
 void PDFPageWidget::mousePressEvent(QMouseEvent* event) {
   if(pPage != NULL) {
-    emit pageClicked(event, path);
+    emit pageClicked(this, event, path);
     emit previewUpdate(pPage);
 
     selected = !selected;
     update();
   }
+}
+
+void PDFPageWidget::dragEnterEvent(QDragEnterEvent* event) {
+  event->acceptProposedAction();
+}
+
+void PDFPageWidget::dropEvent(QDropEvent* event) {
+  emit pageDropped(this, event, event->mimeData()->text(), path);
+  event->acceptProposedAction();
 }
 
 void PDFPageWidget::leaveEvent(QEvent* event) {

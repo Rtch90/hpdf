@@ -57,9 +57,21 @@ void PDFTableWidget::registerPage(PDFPageWidget* child) {
   child->registerName(name);
 }
 
-void PDFTableWidget::pageClicked(QMouseEvent* event, QString path) {
+void PDFTableWidget::pageClicked(PDFPageWidget* sender, QMouseEvent* event, QString path) {
   if(event->button() == Qt::LeftButton) {
-    /* Left click to start dragging. */
+    /* Handle selection. */
+    for(int i = 0; i < selectedPages.size(); i++) {
+      selectedPages.at(i)->setSelected(false);
+    }
+
+    selectedPages.clear();
+
+    if(!sender->isSelected()) {
+      sender->setSelected(true);
+      selectedPages.append(sender);
+    }
+
+    /* Handle drag. */
     QDrag*      drag      = new QDrag(this);
     QMimeData*  mimeData  = new QMimeData();
 
@@ -67,11 +79,12 @@ void PDFTableWidget::pageClicked(QMouseEvent* event, QString path) {
     drag->setMimeData(mimeData);
     drag->setPixmap(QPixmap(":/img/copy.png"));
 
-    Qt::DropAction dropAction = drag->exec();
+    drag->exec();
   }
 }
 
-void PDFTableWidget::droppedPage(QString pathFrom, QString pathTo) {
+void PDFTableWidget::pageDropped(PDFPageWidget* sender, QDropEvent* event,
+      QString pathFrom, QString pathTo) {
   /*
    * We have dragged the page and dropped it.
    * So we'll handle backend operations here.
