@@ -39,15 +39,54 @@ void PDFTableWidget::loadFile(QString fileName) {
   PDFFileWidget* fileWidget = new PDFFileWidget();
   fileWidget->setAncestor(this);
   fileWidget->setDocument(doc, fileName);
-  connect(fileWidget, SIGNAL(pageClicked(QMouseEvent*,QImage)), this,
-          SIGNAL(pageClicked(QMouseEvent*,QImage)));
-  connect(fileWidget, SIGNAL(previewUpdate(Poppler::Page*)), this,
-          SIGNAL(previewUpdate(Poppler::Page*)));
 
   fileWidgets.append(fileWidget);
 
   fileNames.append(fileName);
 
   containerLayout->insertWidget(containerLayout->count()-1, fileWidget);
+}
+
+void PDFTableWidget::registerPage(PDFPageWidget* child) {
+  /* Need new name? */
+  QString name = QString("/home/pdfpage").append(QString::number(pageChilds.size()));
+  pageChilds[name] = child;
+  child->registerName(name);
+}
+
+void PDFTableWidget::pageClicked(QMouseEvent* event, QString path) {
+  if(event->button() == Qt::LeftButton) {
+    /* Left click to start dragging. */
+    QDrag*      drag      = new QDrag(this);
+    QMimeData*  mimeData  = new QMimeData();
+
+    mimeData->setText(path);
+    drag->setMimeData(mimeData);
+    drag->setPixmap(QPixmap(":/img/copy.png"));
+
+    Qt::DropAction dropAction = drag->exec();
+  }
+}
+
+void PDFTableWidget::droppedPage(QString pathFrom, QString pathTo) {
+  /*
+   * We have dragged the page and dropped it.
+   * So we'll handle backend operations here.
+   */
+
+  /* Frontend operations here.. */
+  qDebug() << pathFrom;
+  qDebug() << pathTo;
+  PDFPageWidget* childFrom  = pageChilds[pathFrom];
+  PDFPageWidget* childTo    = pageChilds[pathTo];
+
+  PDFFileWidget* fileFrom   = (PDFFileWidget*) childFrom->getFather();
+  PDFFileWidget* fileTo     = (PDFFileWidget*) childTo->getFather();
+
+  int posFrom               = fileFrom->removeChild(childFrom);
+  int posTo                 = fileTo->removeChild(childTo);
+
+  fileTo->insertChildAt(childFrom, posTo);
+  fileFrom->insertChildAt(childTo, posFrom);
 }
 

@@ -24,6 +24,8 @@ class PagesContainerWidget : public QWidget {
 public:
   PagesContainerWidget(QWidget* parent = 0);
   QSize sizeHint() const;
+  QVector<PDFPageWidget*> pageWidgets;
+  QHBoxLayout*            mainLayout;
 
   void addPageWidget(PDFPageWidget* image);
 
@@ -31,10 +33,8 @@ protected:
   void dragEnterEvent(QDragEnterEvent* event);
   void dropEvent(QDropEvent* event);
   void mousePressEvent(QMouseEvent* event);
-private:
-  QVector<PDFPageWidget*> pageWidgets;
-  QHBoxLayout*            mainLayout;
 
+private:
   int findPageContainingClickEvent(QPoint pos);
   int findPageWidgetInLayout(PDFPageWidget* pageWidgets);
   int getPagesCount() const;
@@ -47,8 +47,10 @@ class PDFFileWidget : public QWidget {
 public:
   PDFFileWidget(QWidget* parent = 0);
 
-  void setAncestor(QWidget* ancestor) { this->ancestor = ancestor; }
-  void setDocument(Poppler::Document* document, QString fileName);
+  void  setAncestor(QWidget* ancestor) { this->ancestor = ancestor; }
+  void  setDocument(Poppler::Document* document, QString fileName);
+  int   removeChild(PDFPageWidget* child);
+  void  insertChildAt(PDFPageWidget* child, int pos);
 
   bool isCollapsed(void) { return collapsed; }
   void setCollapsed(bool collapsed);

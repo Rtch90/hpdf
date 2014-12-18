@@ -21,25 +21,34 @@ public:
   void setButton(QPushButton* btn);
   QSize sizeHint() const;
   /*void setButtonImage(QImage* pageImage);*/
+  void setAncestor(QWidget* ancestor);
+  void setFather(QWidget* father);
+  QWidget* getFather() { return father; }
+  void registerName(QString name) { path = name; }
 
 protected:
   void paintEvent(QPaintEvent* event);
   void enterEvent(QEvent* event);
   void leaveEvent(QEvent* event);
   void mousePressEvent(QMouseEvent* event);
+  void dragEnterEvent(QDragEnterEvent* event);
+  void dropEvent(QDropEvent* event);
 
 private:
   /*QVector<QPushButton> buttons;*/
+  QString         path;
+  QWidget*        ancestor;
+  QWidget*        father;
+
   QPushButton*    button;
   QImage          image;
   Poppler::Page*  pPage;
   QPixmap         pixmap;
   QPushButton*    btn1, *btn2;
 
-  bool selected = false;
-
 signals:
-  void pageClicked(QMouseEvent* event, QImage pageImage);
+  void pageClicked(QMouseEvent* event, QString path);
   void previewUpdate(Poppler::Page*);
+  void droppedPage(QString, QString);
 };
 

@@ -14,7 +14,7 @@
 
 PagesContainerWidget::PagesContainerWidget(QWidget* parent) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  setAcceptDrops(true);
+  /*setAcceptDrops(true);*/
   mainLayout = new QHBoxLayout();
 
   setLayout(mainLayout);
@@ -35,17 +35,10 @@ void PagesContainerWidget::addPageWidget(PDFPageWidget* pageWidget) {
 }
 
 void PagesContainerWidget::dragEnterEvent(QDragEnterEvent* event) {
-  if(event->mimeData()->hasFormat("text/plain"))
-    event->acceptProposedAction();
+  event->acceptProposedAction();
 }
 
 void PagesContainerWidget::dropEvent(QDropEvent* event) {
-  int from  = event->mimeData()->text().toInt();
-  int to    = findPageWidgetInLayout(pageWidgets[findPageContainingClickEvent(event->pos())]);
-
-  mainLayout->removeWidget(pageWidgets[from]);
-  mainLayout->insertWidget(to, pageWidgets[from]);
-
   event->acceptProposedAction();
 }
 
@@ -142,13 +135,10 @@ void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {
 
     PDFPageWidget* pageWidget = new PDFPageWidget();
   
+    pageWidget->setAncestor(ancestor);
+    pageWidget->setFather(this);
     pageWidget->setPopplerPage(doc->page(i));
     tgen.render(pageWidget, pdfPage);
-
-    connect(pageWidget, SIGNAL(pageClicked(QMouseEvent*,QImage)), this,
-            SIGNAL(pageClicked(QMouseEvent*,QImage)));
-    connect(pageWidget, SIGNAL(previewUpdate(Poppler::Page*)), this,
-            SIGNAL(previewUpdate(Poppler::Page*)));
 
     pagesContainerWidget->addPageWidget(pageWidget);
     /* Process event. */
@@ -156,5 +146,19 @@ void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {
   }
   tgen.start();
   fileNameLabel->setText(fileName);
+}
+
+int PDFFileWidget::removeChild(PDFPageWidget* child) {
+  int pos = pagesContainerWidget->pageWidgets.indexOf(child);
+  pagesContainerWidget->pageWidgets.remove(pos);
+  pagesContainerWidget->mainLayout->removeItem(pagesContainerWidget->mainLayout->itemAt(pos));
+
+  return pos;
+}
+
+void PDFFileWidget::insertChildAt(PDFPageWidget* child, int pos) {
+  child->setFather(this);
+  pagesContainerWidget->mainLayout->insertWidget(pos, child);
+  pagesContainerWidget->pageWidgets.insert(pos, child);
 }
 
