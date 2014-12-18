@@ -60,15 +60,25 @@ void PDFTableWidget::registerPage(PDFPageWidget* child) {
 void PDFTableWidget::pageClicked(PDFPageWidget* sender, QMouseEvent* event, QString path) {
   if(event->button() == Qt::LeftButton) {
     /* Handle selection. */
-    for(int i = 0; i < selectedPages.size(); i++) {
-      selectedPages.at(i)->setSelected(false);
-    }
+    if(event->modifiers() != Qt::ControlModifier) {
+      for(int i = 0; i < selectedPages.size(); i++) {
+        selectedPages.at(i)->setSelected(false);
+      }
 
-    selectedPages.clear();
+      selectedPages.clear();
 
-    if(!sender->isSelected()) {
-      sender->setSelected(true);
-      selectedPages.append(sender);
+      if(!sender->isSelected()) {
+        sender->setSelected(true);
+        selectedPages.append(sender);
+      }
+    } else {
+      if(!sender->isSelected()) {
+        sender->setSelected(true);
+        selectedPages.append(sender);
+      } else {
+        sender->setSelected(false);
+        selectedPages.remove(selectedPages.indexOf(sender));
+      }
     }
 
     /* Handle drag. */
