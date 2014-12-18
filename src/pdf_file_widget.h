@@ -1,5 +1,6 @@
 #pragma once
 #include <QWidget>
+#include <QFrame>
 #include <poppler-qt5.h>
 #include "pdf_page_widget.h"
 #include "thumbgen.h"
@@ -16,8 +17,9 @@ class QPoint;
 class QDragEnterEvent;
 class QDropEvent;
 class QMouseEvent;
-class PDFPageWidget;
+class QPaintEvent;
 class ThumbGen;
+class PDFPageWidget;
 
 class PagesContainerWidget : public QWidget {
   Q_OBJECT
@@ -37,27 +39,29 @@ private:
   int getPagesCount() const;
 };
 
-class PDFFileWidget : public QWidget {
+class PDFFileWidget : public QFrame {
   Q_OBJECT
   Q_PROPERTY(bool collapsed READ isCollapsed WRITE setCollapsed)
 
 public:
   PDFFileWidget(QWidget* parent = 0);
 
-  void  setAncestor(QWidget* ancestor) { this->ancestor = ancestor; }
+  void  setAncestor(QWidget* ancestor);
   void  setDocument(Poppler::Document* document, QString fileName);
   int   removeChild(PDFPageWidget* child);
   void  insertChildAt(PDFPageWidget* child, int pos);
 
+  void setSelected(bool select);
+  bool isSelected(void) { return selected; }
   bool isCollapsed(void) { return collapsed; }
   void setCollapsed(bool collapsed);
 
 protected:
-  
+  void mousePressEvent(QMouseEvent* event);
+  void paintEvent(QPaintEvent* event);
 
 private slots:
   void collapsedButtonClick();
-  void pageClickedHandler(QMouseEvent*, QImage);
   void updateThumbnail(QImage, PDFPageWidget*);
 
 private:
@@ -70,10 +74,9 @@ private:
   QScrollArea*            scrollArea;
   QWidget*                ancestor;
   bool                    collapsed;
+  bool                    selected;
 
 signals:
-  void pageClicked(QMouseEvent*, QImage);
-  void pageClicked(QMouseEvent*, Poppler::Page*);
-  void previewUpdate(Poppler::Page*);
+  void fileClicked(PDFFileWidget*, QMouseEvent*);
 };
 

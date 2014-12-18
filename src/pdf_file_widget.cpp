@@ -1,6 +1,5 @@
 #include <QtWidgets>
 #include <QtGlobal>
-
 #include "pdf_file_widget.h"
 #include "pdf_page_widget.h"
 
@@ -45,8 +44,9 @@ void PagesContainerWidget::dropEvent(QDropEvent* event) {
   event->acceptProposedAction();
 }
 
-PDFFileWidget::PDFFileWidget(QWidget* parent) {
+PDFFileWidget::PDFFileWidget(QWidget* parent) :QFrame(parent) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+  setFrameStyle(QFrame::Box);
 
   topLayout       = new QGridLayout();
 
@@ -68,9 +68,41 @@ PDFFileWidget::PDFFileWidget(QWidget* parent) {
   setLayout(topLayout);
 
   setCollapsed(false);
+  selected = false;
 
   connect(&tgen, SIGNAL(updateThumbnail(QImage,PDFPageWidget*)), this,
           SLOT(updateThumbnail(QImage,PDFPageWidget*)));
+}
+
+void PDFFileWidget::setAncestor(QWidget* ancestor) {
+  this->ancestor = ancestor;
+  connect(this, SIGNAL(fileClicked(PDFFileWidget*, QMouseEvent*)), ancestor,
+          SLOT(fileClicked(PDFFileWidget*, QMouseEvent*)));
+}
+
+void PDFFileWidget::setSelected(bool select) {
+  selected = select;
+  update();
+}
+
+void PDFFileWidget::mousePressEvent(QMouseEvent* event) {
+  emit fileClicked(this, event);
+}
+
+void PDFFileWidget::paintEvent(QPaintEvent* event) {
+  QPalette palette = this->palette();
+  QPalette labelPalette = fileNameLabel->palette();
+  if(selected) {
+    palette.setColor(foregroundRole(), palette.color(QPalette::Highlight));
+    labelPalette.setColor(foregroundRole(), palette.color(QPalette::Highlight));
+  } else {
+    palette.setColor(foregroundRole(), palette.color(QPalette::Dark));
+    labelPalette.setColor(foregroundRole(), palette.color(QPalette::Text));
+  }
+  this->setPalette(palette);
+  fileNameLabel->setPalette(labelPalette);
+
+  QFrame::paintEvent(event);
 }
 
 void PDFFileWidget::updateThumbnail(QImage img, PDFPageWidget* pw) {
@@ -90,10 +122,6 @@ void PDFFileWidget::setCollapsed(bool state) {
 
 void PDFFileWidget::collapsedButtonClick(void) {
   setCollapsed(!collapsed);
-}
-
-void PDFFileWidget::pageClickedHandler(QMouseEvent*, QImage) {
-
 }
 
 void PDFFileWidget::setDocument(Poppler::Document* document, QString fileName) {

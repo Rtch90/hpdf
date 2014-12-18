@@ -16,6 +16,7 @@ PDFTableWidget::PDFTableWidget(QWidget* parent) : QFrame(parent) {
   scrollArea = new QScrollArea();
   scrollArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   scrollArea->setWidgetResizable(true);
+  scrollArea->setFrameStyle(QFrame::Plain);
 
   containerLayout = new QVBoxLayout();
   containerWidget = new QWidget();
@@ -55,6 +56,31 @@ void PDFTableWidget::registerPage(PDFPageWidget* child) {
   qDebug() << name;
   pageChilds[name] = child;
   child->registerName(name);
+}
+
+void PDFTableWidget::fileClicked(PDFFileWidget* sender, QMouseEvent* event) {
+  if(event->button() == Qt::LeftButton) {
+    if(event->modifiers() != Qt::LeftButton) {
+      for(int i = 0; i < selectedFiles.size(); i++) {
+        selectedFiles.at(i)->setSelected(false);
+      }
+
+      selectedFiles.clear();
+
+      if(!sender->isSelected()) {
+        sender->setSelected(true);
+        selectedFiles.append(sender);
+      }
+    } else {
+      if(!sender->isSelected()) {
+        sender->setSelected(true);
+        selectedFiles.append(sender);
+      } else {
+        sender->setSelected(false);
+        selectedFiles.remove(selectedFiles.indexOf(sender));
+      }
+    }
+  }
 }
 
 void PDFTableWidget::pageClicked(PDFPageWidget* sender, QMouseEvent* event, QString path) {

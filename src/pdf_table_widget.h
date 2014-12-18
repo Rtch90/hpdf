@@ -23,6 +23,7 @@ public:
 
 protected:
   PDFJam pdfJam;
+
 private:
   QVBoxLayout*                outerLayout;
   QScrollArea*                scrollArea;
@@ -40,10 +41,13 @@ signals:
   void previewUpdate(Poppler::Page*);
 
 private slots:
-  void pageClicked(PDFPageWidget* sender, QMouseEvent* event, QString path);
-  void pageDropped(PDFPageWidget* sender, QDropEvent* event, QString, QString);
+  void pageClicked(PDFPageWidget*, QMouseEvent*, QString);
+  void pageDropped(PDFPageWidget*, QDropEvent*, QString, QString);
+
+  void fileClicked(PDFFileWidget*, QMouseEvent*);
 
 private:
   QVector<PDFPageWidget*> selectedPages;
+  QVector<PDFFileWidget*> selectedFiles;
 };
 
