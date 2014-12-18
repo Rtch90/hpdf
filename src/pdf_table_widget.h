@@ -3,6 +3,7 @@
 #include <QHash>
 #include <poppler-qt5.h>
 
+#include "pdf_jam.h"
 #include "pdf_page_widget.h"
 
 class QImage;
@@ -20,7 +21,7 @@ public:
   void registerPage(PDFPageWidget* child);
 
 protected:
-  
+  PDFJam pdfJam;
 private:
   QVBoxLayout*                outerLayout;
   QScrollArea*                scrollArea;

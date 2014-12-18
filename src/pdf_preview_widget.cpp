@@ -12,21 +12,20 @@ void PDFPreviewWidget::setImage(QImage image) {
 }
 
 void PDFPreviewWidget::regenImage(void) {
-  if(pPage != NULL) {
-    double dpi;
-    double dpi2;
-    QSize targetSize  = this->size();
-    QSizeF oriSize    = pPage->pageSizeF();
-    double oriDpi     = 72;
-    dpi   = targetSize.height() / (float)oriSize.height()*72;
-    dpi2  = targetSize.width()  / (float)oriSize.width()*72;
-    dpi   = dpi<dpi2?dpi:dpi2;
-    previewImage = pPage->renderToImage(dpi, dpi);
-  }
+  double dpi;
+  double dpi2;
+  QSize targetSize  = this->size();
+  QSizeF oriSize    = pPage->pageSizeF();
+  double oriDpi     = 72;
+  dpi   = targetSize.height() / (float)oriSize.height()*72;
+  dpi2  = targetSize.width()  / (float)oriSize.width()*72;
+  dpi   = dpi<dpi2?dpi:dpi2;
+  previewImage = pPage->renderToImage(dpi, dpi);
 }
 
 void PDFPreviewWidget::previewUpdate(Poppler::Page* pp) {
   pPage = pp;
+  qDebug() << "Set new popler page" << pp;
   regenImage();
   update();
 }
@@ -36,7 +35,8 @@ void PDFPreviewWidget::pageClicked(QMouseEvent* mouseEvent, QImage image) {
 }
 
 void PDFPreviewWidget::resizeEvent(QResizeEvent* event) {
-  regenImage();
+  if(pPage != NULL)
+    regenImage();
 }
 
 void PDFPreviewWidget::paintEvent(QPaintEvent* event) {

@@ -7,11 +7,11 @@
 PDFJam::PDFJam(void) {
   
 }
-#if 0
+
 /* Ensure the folder exists. */
 void PDFJam::makeFolder(QString path) {
-  QString tmp = "mkdir -p %1";
-  int value = system(tmp.arg(path).toStdString().c_str());
+  QString tmp = "mksir -p %1 && rm %2*";
+  int value = system(tmp.arg(path).arg(path).toStdString().c_str());
   if(value != 0)
     qDebug() << "ERROR: Failed to make " << path;
 }
@@ -61,11 +61,4 @@ void PDFJam::run(void) {
 
   /*system("echo 'tata' > /tmp/test.txt");*/
 }
-#endif
-
-void PDFJam::run(void) {
-
-}
-
-
 

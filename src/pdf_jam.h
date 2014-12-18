@@ -1,14 +1,28 @@
 #pragma once
+#include <QThread>
+#include <QMutex>
+#include <QImage>
+#include <poppler-qt5.h>
 
-class PDFJam {/*: public QThread {*/
-  /*Q_OBJECT*/
+class PDFPageWidget;
+class QImage;
+
+class PDFJam : public QThread {
+  Q_OBJECT
 public:
   PDFJam(void);
+
+  void pushCommand(QString);
+  void loadFile(QString fileName, int, int);
+  void makeFolder(QString);
 
 protected:
   void run(void);
 
 private:
-  volatile bool stopped;
+  QVector<QString> cmdQueue;
+  QString nextCommand(void);
+  bool isQueueEmpty(void);
+  QMutex mutex;
 };
 
