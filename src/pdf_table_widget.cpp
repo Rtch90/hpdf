@@ -39,7 +39,6 @@ void PDFTableWidget::loadFile(QString fileName) {
   PDFFileWidget* fileWidget = new PDFFileWidget();
   fileWidget->setAncestor(this);
   fileWidget->setDocument(doc, fileName);
-  pdfJam.loadFile(fileName, files.size()-1, doc->numPages());
   connect(fileWidget, SIGNAL(pageClicked(QMouseEvent*,QImage)), this,
           SIGNAL(pageClicked(QMouseEvent*,QImage)));
   connect(fileWidget, SIGNAL(previewUpdate(Poppler::Page*)), this,

@@ -7,7 +7,7 @@
 PDFJam::PDFJam(void) {
   
 }
-
+#if 0
 /* Ensure the folder exists. */
 void PDFJam::makeFolder(QString path) {
   QString tmp = "mkdir -p %1";
@@ -61,4 +61,11 @@ void PDFJam::run(void) {
 
   /*system("echo 'tata' > /tmp/test.txt");*/
 }
+#endif
+
+void PDFJam::run(void) {
+
+}
+
+
 

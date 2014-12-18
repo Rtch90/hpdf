@@ -35,8 +35,8 @@ PDFPageWidget::PDFPageWidget(QWidget* parent) :
   QVBoxLayout* vbox = new QVBoxLayout();
   vbox->addStretch(1);
   vbox->addLayout(hbox);
+  vbox->setContentsMargins(0, 3, 0, 3);
   this->setLayout(vbox);
-  vbox->setContentsMargins(0, 0, 0, 0);
 }
 
 void PDFPageWidget::setButton(QPushButton* btn) {

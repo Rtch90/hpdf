@@ -10,6 +10,8 @@
 #define CHILD_AREA_WIDTH        150
 #define CHILD_AREA_HEIGHT       150
 
+#define CHILD_AREA_SIDE_MARGIN  6
+
 PagesContainerWidget::PagesContainerWidget(QWidget* parent) {
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   setAcceptDrops(true);
@@ -23,7 +25,7 @@ int PagesContainerWidget::getPagesCount() const {
 }
 
 QSize PagesContainerWidget::sizeHint() const {
-  return QSize(CHILD_AREA_WIDTH*getPagesCount(), CHILD_AREA_HEIGHT + 20);
+  return QSize((CHILD_AREA_SIDE_MARGIN + CHILD_AREA_WIDTH)*getPagesCount(), CHILD_AREA_HEIGHT + 22);
 }
 
 void PagesContainerWidget::addPageWidget(PDFPageWidget* pageWidget) {
