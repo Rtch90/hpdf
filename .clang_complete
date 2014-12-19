@@ -9,4 +9,6 @@
 -I /usr/include/gtk-3.0/
 -I /usr/include/qt4/
 -I /usr/include/x86_64-linux-gnu/qt5/
+-I /usr/include/x86_64-linux-gnu/qt5/QtWidgets/
+-I /usr/local/Qt-5.3.2/lib/
 -I lib/lua/

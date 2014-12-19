@@ -41,7 +41,7 @@ void PDFTableWidget::loadFile(QString fileName) {
   PDFFileWidget* fileWidget = new PDFFileWidget();
   fileWidget->setAncestor(this);
   fileWidget->setDocument(doc, fileName);
-  pdfJam.loadFile(fileName, files.size()-1, doc->numPages());
+  pdfJam.loadFile(fileName, files.size()-1, doc);
 
   fileWidgets.append(fileWidget);
 
