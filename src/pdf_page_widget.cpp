@@ -9,7 +9,6 @@ PDFPageWidget::PDFPageWidget(QWidget* parent) :
   selected = false;
   setAcceptDrops(true);
 
-  /* Resize widget. */
   this->resize(150, 150);
   this->setMinimumSize(150, 150);
   this->setMaximumSize(150, 150);
