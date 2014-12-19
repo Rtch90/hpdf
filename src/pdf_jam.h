@@ -14,6 +14,9 @@ public:
 
   void pushCommand(QString);
   void loadFile(QString fileName, int, int);
+  void exportFile(int, int, QString);
+  bool removePage(int, int, int);
+  bool rotatePage(int, int, int);
   void makeFolder(QString);
 
 protected:
