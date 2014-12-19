@@ -27,5 +27,23 @@ SOURCES += \
 
 RESOURCES += hpdf.qrc
 
-CONFIG += console
+#CONFIG += console
+
+macx {
+    CONFIG(release, debug|release) {
+        DESTDIR = ../bin/
+    }
+}
+
+win32 {
+    CONFIG(release, debug|release) {
+        DESTDIR = ../bin/
+    }
+}
+
+linux {
+    CONFIG(release, debug|release) {
+        DESTDIR = ../bin/
+    }
+}
 

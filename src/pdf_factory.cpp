@@ -63,16 +63,16 @@ void PDFFactory::createActions(void) {
   openAction->setStatusTip(tr("Open a PDF"));
   connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
 
-  exportAction = new QAction(tr("&Export"), this);
+  exportAction = new QAction(tr("&Export a single file"), this);
   exportAction->setIcon(QIcon(":/img/export.png"));
   exportAction->setShortcut(tr("Ctrl+S"));
-  exportAction->setStatusTip(tr("Export the selected frame to a new PDF"));
+  exportAction->setStatusTip(tr("Export the selected file to a new PDF"));
   /*connect(saveAction, SIGNAL(triggered()), this, SLOT(save()))*/
 
-  exportAllAction = new QAction(tr("Combine all and export"), this);
+  exportAllAction = new QAction(tr("Combine all"), this);
   exportAllAction->setIcon(QIcon(":/img/exportall.png"));
   exportAllAction->setShortcut(tr("Shift+Ctrl+S"));
-  exportAllAction->setStatusTip(tr("Combine all and export as one PDF"));
+  exportAllAction->setStatusTip(tr("Export all to multiple PDF files"));
   /*connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()))*/
   
   cutAction = new QAction(tr("C&ut"), this);
@@ -140,7 +140,7 @@ void PDFFactory::createStatusBar(void) {
   statusBar()->showMessage(tr(""));
 }
 
-void PDFFactory::openFile() {
+void PDFFactory::openFile(void) {
   QStringList fileNames = QFileDialog::getOpenFileNames(this,
       tr("Open PDF file"), ".",
       tr("PDF file (*.pdf)"));
