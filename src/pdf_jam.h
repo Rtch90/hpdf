@@ -17,9 +17,10 @@ public:
   void exportFile(int, int, QString, QSize, bool, bool, int, int);
   void savePageAsImage(Poppler::Page pp, QString dst, double);
   void movePage(int, int, int, int, int, int);
-  void pastePage(int, int, int);
-  void copyPage(int, int, int);
-  void cutPage(int, int, int);
+  
+  void pastePage(int, int, int, int);
+  void copyPage(int, int, int, int);
+  void cutPage(int, int, int, int);
   
   bool removePage(int, int, int);
   bool rotatePage(int, int, int);
