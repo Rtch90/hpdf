@@ -19,22 +19,18 @@ PDFPageWidget::PDFPageWidget(QWidget* parent) :
 
   QHBoxLayout* hbox = new QHBoxLayout();
 
-  btn1 = new QPushButton("", this);
-  btn1->setObjectName("new");
-  btn2 = new QPushButton("", this);
-  btn2->setObjectName("open");
+  btnCut = new QPushButton("", this);
+  btnCut->setObjectName("cut");
+  btnCopy = new QPushButton("", this);
+  btnCopy->setObjectName("copy");
 
-  QPixmap pm, pm2;
-  pm.load("../img/new.png");
-  pm2.load("../img/open.png");
-  
-  btn1->setIcon(pm);
-  btn2->setIcon(pm2);
-  btn1->hide();
-  btn2->hide();
+  btnCut->setIcon(QPixmap::fromImage(QImage("img/cut.png")));
+  btnCopy->setIcon(QPixmap::fromImage(QImage("img/copy.png")));
+  btnCut->hide();
+  btnCopy->hide();
 
-  hbox->addWidget(btn1, 1, Qt::AlignRight);
-  hbox->addWidget(btn2, 0, Qt::AlignLeft);
+  hbox->addWidget(btnCut, 0, Qt::AlignLeft);
+  hbox->addWidget(btnCopy, 1, Qt::AlignRight);
 
   QVBoxLayout* vbox = new QVBoxLayout();
   vbox->addStretch(1);
@@ -57,11 +53,6 @@ void PDFPageWidget::setAncestor(QWidget* ancestor) {
 
 void PDFPageWidget::setFather(QWidget* father) {
   this->father = father;
-}
-
-void PDFPageWidget::setButton(QPushButton* btn) {
-  button = btn;
-  update();
 }
 
 void PDFPageWidget::setPopplerPage(Poppler::Page* pp) {
@@ -101,15 +92,15 @@ void PDFPageWidget::dropEvent(QDropEvent* event) {
 }
 
 void PDFPageWidget::leaveEvent(QEvent* event) {
- btn1->hide();
- btn2->hide();
+ btnCut->hide();
+ btnCopy->hide();
 
  this->setFrameStyle(QFrame::Plain);
 }
 
 void PDFPageWidget::enterEvent(QEvent* event) {
-  btn1->show();
-  btn2->show();
+  btnCut->show();
+  btnCopy->show();
 
   this->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
 }

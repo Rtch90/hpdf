@@ -19,8 +19,6 @@ public:
 
   void setThumbnail(QImage pageImage);
   void setPopplerPage(Poppler::Page*);
-
-  void setButton(QPushButton* btn);
   void setAncestor(QWidget* ancestor);
   void setFather(QWidget* father);
   QWidget* getFather() { return father; }
@@ -43,11 +41,10 @@ private:
   QWidget*        ancestor;
   QWidget*        father;
 
-  QPushButton*    button;
   QImage          image;
   Poppler::Page*  pPage;
   QPixmap         pixmap;
-  QPushButton*    btn1, *btn2;
+  QPushButton*    btnCut, *btnCopy;
 
   bool            selected;
 

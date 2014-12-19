@@ -53,7 +53,6 @@ void PDFPreviewWidget::resizeEvent(QResizeEvent* event) {
 
 void PDFPreviewWidget::wheelEvent(QWheelEvent* event) {
   if(pPage != NULL) {
-    qDebug() << currentPixmapSize;
     if(event->delta() > 0)
       currentPixmapSize += QSize(30, 30);
     else if(event->delta() < 0)
