@@ -16,8 +16,11 @@ public:
   void loadFile(QString fileName, int, Poppler::Document*);
   void exportFile(int, int, QString, QSize, bool, bool, int, int);
   void savePageAsImage(Poppler::Page pp, QString dst, double);
-  void movePage(int fromFileIndex, int fromPageIndex, int toFileIndex, int toPageIndex);
-
+  void movePage(int, int, int, int, int, int);
+  void pastePage(int, int, int);
+  void copyPage(int, int, int);
+  void cutPage(int, int, int);
+  
   bool removePage(int, int, int);
   bool rotatePage(int, int, int);
   void makeFolder(QString);

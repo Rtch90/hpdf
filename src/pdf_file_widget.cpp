@@ -2,6 +2,7 @@
 #include <QtGlobal>
 #include "pdf_file_widget.h"
 #include "pdf_page_widget.h"
+#include "pdf_table_widget.h"
 
 #define COLLAPSE_BUTTON_WIDTH   32
 #define COLLAPSE_BUTTON_HEIGHT  32
@@ -39,8 +40,8 @@ void PagesContainerWidget::dragEnterEvent(QDragEnterEvent* event) {
 
 void PagesContainerWidget::dropEvent(QDropEvent* event) {
   QPoint pos = event->pos();
-  qDebug() << "FILE DROP";
-  qDebug() << (pos.x() / (CHILD_AREA_SIDE_MARGIN + CHILD_AREA_WIDTH));
+  int page = (pos.x() / (CHILD_AREA_SIDE_MARGIN + CHILD_AREA_WIDTH));
+  ((PDFTableWidget*)ancestor)->moveSelectedPages(event->mimeData()->text(), pageWidgets.at(page));
   event->acceptProposedAction();
 }
 
@@ -86,6 +87,7 @@ PDFFileWidget::PDFFileWidget(QWidget* parent) :QFrame(parent) {
 
 void PDFFileWidget::setAncestor(QWidget* ancestor) {
   this->ancestor = ancestor;
+  pagesContainerWidget->setAncestor(ancestor);
   connect(this, SIGNAL(fileClicked(PDFFileWidget*, QMouseEvent*)), ancestor,
           SLOT(fileClicked(PDFFileWidget*, QMouseEvent*)));
 }
@@ -165,12 +167,19 @@ int PDFFileWidget::removeChild(PDFPageWidget* child) {
   pagesContainerWidget->pageWidgets.remove(pos);
   pagesContainerWidget->mainLayout->removeItem(pagesContainerWidget->mainLayout->itemAt(pos));
 
+  pagesContainerWidget->adjustSize();
   return pos;
+}
+
+int PDFFileWidget::indexChild(PDFPageWidget* child) {
+  return pagesContainerWidget->pageWidgets.indexOf(child);
 }
 
 void PDFFileWidget::insertChildAt(PDFPageWidget* child, int pos) {
   child->setFather(this);
   pagesContainerWidget->mainLayout->insertWidget(pos, child);
   pagesContainerWidget->pageWidgets.insert(pos, child);
+
+  pagesContainerWidget->adjustSize();
 }
 

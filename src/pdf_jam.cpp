@@ -54,8 +54,49 @@ bool PDFJam::removePage(int fileIndex, int numPages, int deletedPageIndex) {
   pushCommand(cmd);
 }
 
-void PDFJam::movePage(int fromFileIndex, int fromPageIndex, int toFileIndex, int toPageIndex) {
-  
+void PDFJam::cutPage(int fileIndex, int numPages, int pageIndex) {
+  if((pageIndex < 0) || (pageIndex >= numPages)) {
+    return;
+  }
+
+  copyPage(fileIndex, numPages, pageIndex);
+  removePage(fileIndex, numPages, pageIndex);
+}
+
+void PDFJam::copyPage(int fileIndex, int numPages, int pageIndex) {
+  QString cpTmp = "cp /tmp/hpdf/%1%2.pdf /tmp/hpdf/clipboard.pdf ";
+  QString cmd   = cpTmp.arg(QString::number(fileIndex)).arg(QString::number(pageIndex));
+  pushCommand(cmd);
+}
+
+void PDFJam::pastePage(int fileIndex, int numPages, int pageIndex) {
+  /* TODO: Check if the clipboard file exists. */
+  QString cmd   = "";
+  QString mvTmp = "mv /tmp/hpdf/%1/%2.pdf /tmp/hpdf/%3/%4.pdf ";
+  for(int i = numPages-1; i >= pageIndex; i--) {
+    cmd += mvTmp.arg(QString::number(fileIndex)).arg(QString::number(i))
+                    .arg(QString::number(fileIndex)).arg(QString::number(i+1));
+    if(i > pageIndex) cmd += " && ";
+  }
+
+  QString pasteTmp = "cp /tmp/hpdf/clipboard.pdf /tmp/hpdf/%1/%2.pdf ";
+  cmd += " && " + pasteTmp.arg(QString::number(fileIndex)).arg(QString::number(pageIndex));
+  pushCommand(cmd);
+}
+
+void PDFJam::movePage(int fromFileIndex, int fromFileNumPage, int fromPageIndex,
+      int toFileIndex, int toFileNumPage, int toPageIndex) {
+  /* TODO: Back up clipboard. */
+  /* If this page is moving with files update to file index. */
+  if(toFileIndex == fromFileIndex) {
+    toFileNumPage--;
+    if(toPageIndex > fromPageIndex)
+      toPageIndex--;
+    toPageIndex--;
+  }
+
+  cutPage(fromFileIndex, fromFileNumPage, fromPageIndex);
+  pastePage(toFileIndex, toFileNumPage, toPageIndex);
 }
 
 void PDFJam::savePageAsImage(Poppler::Page pp, QString dst, double dpi = 72) {
@@ -109,9 +150,10 @@ void PDFJam::loadFile(QString fileName, int fileIndex, Poppler::Document* pd) {
   pushCommand(cmd);
 
   /* Test the backend functions. */
-  /*removePage(0, numPages, 5);
   rotatePage(0, 5, 270);
-  exportFile(0, numPages-1, "/home/allanis/conco.pdf", QSize(2, 2), true, true, 1, 0);*/
+  movePage(0, numPages, 5, 0, numPages, 10);
+  /*removePage(0, numPages, 5);*/
+  exportFile(0, numPages, "/home/allanis/conco.pdf", QSize(2, 2), true, true, 1, 0);
   /* End test. */
 }
 

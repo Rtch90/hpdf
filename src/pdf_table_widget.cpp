@@ -1,4 +1,5 @@
 #include <QtWidgets>
+#include <QtAlgorithms>
 #include "pdf_table_widget.h"
 #include "pdf_page_widget.h"
 #include "pdf_file_widget.h"
@@ -106,61 +107,97 @@ void PDFTableWidget::fileRemoveButtonClicked(PDFFileWidget* sender) {
 void PDFTableWidget::pageClicked(PDFPageWidget* sender, QMouseEvent* event, QString path) {
   if(event->button() == Qt::LeftButton) {
     /* Handle selection. */
-    if(event->modifiers() != Qt::ControlModifier) {
-      for(int i = 0; i < selectedPages.size(); i++) {
-        selectedPages.at(i)->setSelected(false);
-      }
+    if(selectedPages.size() > 0 && event->modifiers() != Qt::ControlModifier) {
+      /* Handle Drag. */
+      QDrag* drag = new QDrag(this);
+      QMimeData* mimeData = new QMimeData;
 
-      selectedPages.clear();
+      mimeData->setText(path);
+      drag->setMimeData(mimeData);
+      drag->setPixmap(QPixmap(":/img/copy.png"));
 
-      if(!sender->isSelected()) {
-        sender->setSelected(true);
-        selectedPages.append(sender);
-      }
+      drag->exec();
     } else {
       if(!sender->isSelected()) {
         sender->setSelected(true);
-        selectedPages.append(sender);
+        PDFFileWidget* senderF = (PDFFileWidget*)sender->getFather();
+        int senderPID = senderF->indexChild(sender);
+        int senderFID = fileWidgets.indexOf(senderF);
+
+        int i = 0;
+        for(i = 0; i < selectedPages.size(); i++) {
+          PDFPageWidget* target   = selectedPages.at(i);
+          PDFFileWidget* targetF  = (PDFFileWidget*)target->getFather();
+          int targetPID = targetF->indexChild(target);
+          int targetFID = fileWidgets.indexOf(targetF);
+
+          if(targetFID == senderFID && targetFID > senderFID)
+            break;
+
+          if(targetFID > senderFID)
+            break;
+        }
+
+        selectedPages.insert(i, sender);
       } else {
         sender->setSelected(false);
         selectedPages.remove(selectedPages.indexOf(sender));
       }
     }
+  }
+  if(event->button() == Qt::RightButton) {
+    for(int i = 0; i < selectedPages.size(); i++) {
+      selectedPages.at(i)->setSelected(false);
+    }
 
-    /* Handle drag. */
-    QDrag*      drag      = new QDrag(this);
-    QMimeData*  mimeData  = new QMimeData();
-
-    mimeData->setText(path);
-    drag->setMimeData(mimeData);
-    drag->setPixmap(QPixmap(":/img/copy.png"));
-
-    drag->exec();
+    selectedPages.clear();
   }
 }
 
 void PDFTableWidget::pageDropped(PDFPageWidget* sender, QDropEvent* event,
       QString pathFrom, QString pathTo) {
-  /*
-   * We have dragged the page and dropped it.
-   * So we'll handle backend operations here.
-   */
+  
+  moveSelectedPages(pathFrom, pathTo);
+}
 
-  /* Frontend operations here.. */
-  if(pathFrom == pathTo)
+void PDFTableWidget::moveSelectedPages(QString pathFrom, PDFPageWidget* page)  {
+  moveSelectedPages(pathFrom, page->getName());
+}
+
+void PDFTableWidget::moveSelectedPages(QString pathFrom, QString pathTo) {
+  if(selectedPages.size() == 0)
     return;
-  qDebug() << pathFrom;
-  qDebug() << pathTo;
-  PDFPageWidget* childFrom  = pageChilds[pathFrom];
-  PDFPageWidget* childTo    = pageChilds[pathTo];
 
-  PDFFileWidget* fileFrom   = (PDFFileWidget*) childFrom->getFather();
-  PDFFileWidget* fileTo     = (PDFFileWidget*) childTo->getFather();
+  bool accept = false;
+  for(int i = 0; i < selectedPages.size(); i++)
+    if(selectedPages.at(i)->getName() == pathFrom)
+      accept = true;
 
-  int posFrom               = fileFrom->removeChild(childFrom);
-  int posTo                 = fileTo->removeChild(childTo);
+  if(!accept)
+    return;
 
-  fileTo->insertChildAt(childFrom, posTo);
-  fileFrom->insertChildAt(childTo, posFrom);
+  for(int i = 0; i < selectedPages.size(); i++)
+    if(selectedPages.at(i)->getName() == pathTo)
+      return;
+
+  PDFPageWidget* childTo = pageChilds[pathTo];
+  PDFFileWidget* fileTo  = (PDFFileWidget*) childTo->getFather();
+
+  for(int i = selectedPages.size() - 1; i >= 0; i--) {
+    PDFPageWidget* childFrom = selectedPages[i];
+    PDFFileWidget* fileFrom  = (PDFFileWidget*) childFrom->getFather();
+    fileFrom->removeChild(childFrom);
+    /*PDFFileWidget* fileFrom = (PDFFileWidget*) childFrom->getFather();*/
+
+    /*int posFrom = fileFrom->removeChild(childFrom);*/
+  }
+  int posTo = fileTo->indexChild(childTo);
+
+  for(int i = selectedPages.size() - 1; i >= 0; i--) {
+    PDFPageWidget* childFrom = selectedPages[i];
+    PDFFileWidget* fileFrom  = (PDFFileWidget*)childFrom->getFather();
+    fileTo->insertChildAt(childFrom, posTo);
+    /*fileFrom->insertChildAt(childTo, posFrom);*/
+  }
 }
 
