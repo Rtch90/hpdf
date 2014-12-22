@@ -7,7 +7,7 @@ PDFExportDialog::PDFExportDialog(QWidget *parent) :
   mainLayout = new QGridLayout();
   mainLayout->setSpacing(15);
 
-  // File list
+  /* File list. */
   fileListBox = new QGroupBox("Selected files");
   QVBoxLayout *fileListLayout = new QVBoxLayout();
   fileList = new QListWidget();
@@ -17,7 +17,7 @@ PDFExportDialog::PDFExportDialog(QWidget *parent) :
   fileListBox->setLayout(fileListLayout);
   mainLayout->addWidget(fileListBox, 0, 0, 4, 2);
 
-  // is landscape
+  /* Landscape */
   landscapeBox = new QGroupBox("Output orientation");
   QVBoxLayout *landscapeLayout = new QVBoxLayout();
   chkPortrait = new QRadioButton("Portrait");
@@ -28,7 +28,7 @@ PDFExportDialog::PDFExportDialog(QWidget *parent) :
   landscapeLayout->addWidget(chkLandscape);
   landscapeBox->setLayout(landscapeLayout);
 
-  // n-up
+  /* n-up */
   nupBox = new QGroupBox("N-up option");
   nupBox->setCheckable(true);
   nupBox->setChecked(false);
@@ -46,7 +46,7 @@ PDFExportDialog::PDFExportDialog(QWidget *parent) :
   nupLayout->addWidget(txtCol, 1, 1, 1, 2);
   nupBox->setLayout(nupLayout);
 
-  // offsets
+  /* Offsets */
   offsetBox = new QGroupBox("Two-sided offset");
   offsetBox->setCheckable(true);
   offsetBox->setChecked(false);
@@ -68,7 +68,7 @@ PDFExportDialog::PDFExportDialog(QWidget *parent) :
   midFrame->setLayout(midLayout);
   mainLayout->addWidget(midFrame, 0, 2, 4, 2);
 
-  // buttons
+  /* Buttons */
   QVBoxLayout *rightLayout = new QVBoxLayout();
   btnSave = new QPushButton("&Export...");
   connect(btnSave, SIGNAL(clicked()), this, SLOT(btnSaveClicked()));
@@ -99,7 +99,7 @@ void PDFExportDialog::setFilesToExport(QVector<PDFFileWidget*> fileWidgets,
   foreach (const QString str, fileNames) {
     modelList << str;
 
-    QVector<QVariant> option; // Landscape, row, col, left, right, twosided
+    QVector<QVariant> option; /* Landscape, row, col, left, right, twosided */
     bool ok;
     option.append(QVariant(chkLandscape->isChecked()));
     option.append(QVariant(nupBox->isChecked()));
@@ -123,15 +123,15 @@ void PDFExportDialog::btnSaveClicked(void) {
                                                   tr("PDF file (*.pdf)"));
   if (!fileName.isEmpty()) {
     QSize nup;
-    //if (option.at(0).toBool())
-    //nup = QSize(option.at(3).toInt(), option.at(2).toInt());
-    //else
+    /*if (option.at(0).toBool())
+      nup = QSize(option.at(3).toInt(), option.at(2).toInt());
+    else*/
     nup = QSize(option.at(2).toInt(), option.at(3).toInt());
 
     pdfJam.exportFile(fileIndices.at(selectedIndex), fileWidgets.at(selectedIndex)->getChildCount(), fileName,
-                      option.at(1).toBool(), nup, // nup
-                      option.at(0).toBool(), // landscape
-                      option.at(4).toBool(), option.at(5).toInt()); //offset
+                      option.at(1).toBool(), nup, /* nup */
+                      option.at(0).toBool(), /* Landscape */
+                      option.at(4).toBool(), option.at(5).toInt()); /* Offset. */
 
     QMessageBox::information(this, tr("PDFFactory"), tr("Exported succesfully to\n%1.").arg(fileName));
   }
@@ -145,9 +145,9 @@ void PDFExportDialog::btnSaveAllClicked(void) {
                                                     tr("PDF file (*.pdf)"));
 
     QSize nup;
-    //if (chkLandscape->isChecked())
-    //nup = QSize(txtCol->text().toInt(&ok), txtRow->text().toInt(&ok));
-    //else
+    /*if (chkLandscape->isChecked())
+      nup = QSize(txtCol->text().toInt(&ok), txtRow->text().toInt(&ok));
+    else*/
     nup = QSize(txtRow->text().toInt(&ok), txtCol->text().toInt(&ok));
 
     if (!fileName.isEmpty()) {

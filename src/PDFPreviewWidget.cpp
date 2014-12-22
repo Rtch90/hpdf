@@ -22,7 +22,7 @@ void PDFPreviewWidget::updateImage(QImage qimg) {
   update();
 }
 
-void PDFPreviewWidget::regenImage() {
+void PDFPreviewWidget::regenImage(void) {
   double dpi;
   double dpi2;
   QSize targetSize;
@@ -38,18 +38,18 @@ void PDFPreviewWidget::regenImage() {
   dpi2= targetSize.width()/(float)oriSize.width()*oriDpi;
   dpi = dpi<dpi2?dpi:dpi2;
 
-  //previewImage = pPage->renderToImage(dpi,dpi, -1, -1, -1, -1, rotation);
+  /*previewImage = pPage->renderToImage(dpi,dpi, -1, -1, -1, -1, rotation);*/
   pgen.render(pPage,dpi,rotation);
   pgen.start();
 }
 
-void PDFPreviewWidget::regenPixmap() {
+void PDFPreviewWidget::regenPixmap(void) {
   pixmap = QPixmap::fromImage(previewImage);
-  pixmap = pixmap.scaled(currentPixmapSize, Qt::KeepAspectRatioByExpanding);
+  pixmap = pixmap.scaled(currentPixmapSize, Qt::KeepAspectRatio);
   currentPixmapSize = pixmap.size();
 }
 
-void PDFPreviewWidget::repositionPixmap() {
+void PDFPreviewWidget::repositionPixmap(void) {
   currentPixmapPos = QPoint((size().width() - pixmap.width()) / 2, (size().height() - pixmap.height()) / 2);
 }
 
@@ -92,17 +92,20 @@ void PDFPreviewWidget::resizeEvent(QResizeEvent *event) {
 void PDFPreviewWidget::wheelEvent(QWheelEvent *event) {
   if (pPage!=NULL) {
     if (event->delta() > 0)
-      currentPixmapSize += QSize(30, 30);
+      currentPixmapSize += QSize(45, 45);
     else if (event->delta() < 0)
-      currentPixmapSize -= QSize(30, 30);
+      currentPixmapSize -= QSize(45, 45);
 
     if (currentPixmapSize.width() < 150 || currentPixmapSize.height() < 150) {
       currentPixmapSize = QSize(150, 150);
     }
 
-    regenImage();
+    //regenImage();
+
     regenPixmap();
     repositionPixmap();
+    /* TODO: This could be buggy. -- Monitor this. */
+    regenImage(); /* This appears to stop aspect ratio from being a douche. */
     update();
   }
 }

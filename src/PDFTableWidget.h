@@ -20,7 +20,7 @@ class PDFTableWidget: public QFrame
 {
   Q_OBJECT
 public:
-  PDFTableWidget(QWidget *parent = 0);
+  PDFTableWidget(QWidget* parent = 0);
   void loadFile (QString fileName);
   void registerPage(PDFPageWidget *child);
 
@@ -30,10 +30,10 @@ public:
   ThumbGen mainTgen;
 
 private:
-  QVBoxLayout     *outerLayout;
-  QScrollArea     *scrollArea;
-  QWidget         *containerWidget;
-  QVBoxLayout     *containerLayout;
+  QVBoxLayout*  outerLayout;
+  QScrollArea*  scrollArea;
+  QWidget*      containerWidget;
+  QVBoxLayout*  containerLayout;
 
   QVector<Poppler::Document*> files;
   QVector<QString>            fileNames;
@@ -58,6 +58,7 @@ private:
   QVector<PDFFileWidget*> selectedFiles;
 
   QVector<PDFPageWidget*> copiedPages;
+
 public:
   QVector<PDFFileWidget*> getSelectedFiles();
   QVector<int> getSelectedIndices();
@@ -76,8 +77,8 @@ public:
   void pastePage(PDFFileWidget* fileWidget, int pageID);
   void rotatePage(PDFPageWidget* pageWidget);
   void cutPage(PDFPageWidget* pageWidget);
-  void clearClipboard();
-  bool hasClipboard(){ return copiedPages.size() > 0; }
+  void clearClipboard(void);
+  bool hasClipboard(void) { return copiedPages.size() > 0; }
 
 public slots:
   void rotateSelected();

@@ -24,48 +24,48 @@ public:
   QSize sizeHint() const;
 
   void setThumbnail(QImage pageImage);
-  void setOriginInfo(QString path,int num){pageNo = num;oriFilePath=path;};
+  void setOriginInfo(QString path, int num) { pageNo = num;oriFilePath=path; }
   void setPopplerPage(Poppler::Page*);
   void setThumbPopplerPage(Poppler::Page*);
-  void setAncestor(QWidget *ancestor);
-  void setFather(QWidget *father);
-  void rotate90();
+  void setAncestor(QWidget* ancestor);
+  void setFather(QWidget* father);
+  void rotate90(void);
   Poppler::Page::Rotation getRotation();
-  int getIntRotation(){return rotation;};
-  int setIntRotation(int r){rotation = r;};
-  QWidget* getFather() const { return father;}
-  void registerName(QString name) { path = name;}
-  QString getName() { return path;}
-  int getPageNo() { return pageNo;}
-  QString getOriFilePath() { return oriFilePath;}
+  int getIntRotation(void)        { return rotation;    }
+  void setIntRotation(int r)      { rotation = r;       }
+  QWidget* getFather(void) const  { return father;      }
+  void registerName(QString name) { path = name;        }
+  QString getName(void)           { return path;        }
+  int getPageNo(void)             { return pageNo;      }
+  QString getOriFilePath()        { return oriFilePath; }
   Poppler::Page* getNewThumbPopplerPage();
 
   void setSelected(bool select);
-  bool isSelected() {return selected;}
+  bool isSelected(void) { return selected; }
 
-  Poppler::Page* getPage(){return previewPage;}
-  Poppler::Page* getThumbPage(){return thumbPage;}
+  Poppler::Page* getPage(void)      { return previewPage; }
+  Poppler::Page* getThumbPage(void) { return thumbPage;   }
 
 protected:
-  void paintEvent(QPaintEvent *event);
-  void enterEvent(QEvent *event);
-  void leaveEvent(QEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void dragEnterEvent(QDragEnterEvent *event);
-  void dropEvent(QDropEvent *event);
+  void paintEvent(QPaintEvent* event);
+  void enterEvent(QEvent* event);
+  void leaveEvent(QEvent* event);
+  void mousePressEvent(QMouseEvent* event);
+  void dragEnterEvent(QDragEnterEvent* event);
+  void dropEvent(QDropEvent* event);
 
 private:
   //QVector<QPushButton> buttons;
-  QString         path;
-  int             pageNo;
-  QString         oriFilePath;
-  QWidget         *ancestor;
-  QWidget         *father;
+  QString           path;
+  int               pageNo;
+  QString           oriFilePath;
+  QWidget*          ancestor;
+  QWidget*          father;
 
-  QImage           image;
-  Poppler::Page   *previewPage,*thumbPage;
-  QPixmap          pixmap;
-  QPushButton     *btnRotate, *btnCut, *btnCopy, *btnDelete;
+  QImage            image;
+  Poppler::Page*    previewPage,*thumbPage;
+  QPixmap           pixmap;
+  QPushButton*      btnRotate, *btnCut, *btnCopy, *btnDelete;
 
   int             rotation;
 

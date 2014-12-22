@@ -1,13 +1,12 @@
 #include <QtWidgets>
 #include <QtGlobal>
-#include "PDFFactory.h"
+#include "HPDF.h"
 #include "PDFExportDialog.h"
 #include "PDFTableWidget.h"
 #include "PDFPreviewWidget.h"
 #include "PDFPageWidget.h"
 
-PDFFactory::PDFFactory()
-{
+HPDF::HPDF(void) {
   createWidgets();
   createActions();
   createToolBars();
@@ -15,16 +14,15 @@ PDFFactory::PDFFactory()
   createStatusBar();
 }
 
-void PDFFactory::createWidgets()
-{
-  // Set central widget to be the container root
+void HPDF::createWidgets(void) {
+  /* Set central widget to be the container root */
   centralWidget = new QWidget();
   QVBoxLayout *layout = new QVBoxLayout();
   layout->setContentsMargins(2,2,2,2);
   centralWidget->setLayout(layout);
   setCentralWidget(centralWidget);
 
-  // Create ribbon
+  /*Create ribbon */
   ribbon = new QTabWidget();
   ribbon->addTab(new QWidget(), tr("File"));
   ribbon->addTab(new QWidget(), tr("Edit"));
@@ -34,7 +32,7 @@ void PDFFactory::createWidgets()
   ribbon->setFixedHeight(100);
   layout->addWidget(ribbon);
 
-  // Create main area (table)
+  /* Create main area (table) */
 
   pdfTableView = new PDFTableWidget();
   pdfPreview = new PDFPreviewWidget();
@@ -60,8 +58,7 @@ void PDFFactory::createWidgets()
 }
 
 
-void PDFFactory::createActions()
-{
+void HPDF::createActions(void) {
   openAction = new QAction(tr("&Open"), this);
   openAction->setIcon(QIcon(":/img/open.png"));
   openAction->setShortcut(tr("Ctrl+O"));
@@ -116,8 +113,7 @@ void PDFFactory::createActions()
   connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
 }
 
-void PDFFactory::createToolBars()
-{
+void HPDF::createToolBars(void) {
   fileToolBar = new QToolBar(tr("File"));
   fileToolBar->addAction(openAction);
   fileToolBar->addAction(exportAction);
@@ -141,8 +137,7 @@ void PDFFactory::createToolBars()
   helpToolBar->setIconSize(QSize(48, 48));
 }
 
-void PDFFactory::createRibbon()
-{
+void HPDF::createRibbon(void) {
   QWidget *tabFile = ribbon->widget(0);
   QVBoxLayout *layoutTabFile = new QVBoxLayout();
   layoutTabFile->setContentsMargins(2,0,2,0);
@@ -168,12 +163,11 @@ void PDFFactory::createRibbon()
   tabHelp->setLayout(layoutTabHelp);
 }
 
-void PDFFactory::createStatusBar()
-{
+void HPDF::createStatusBar(void) {
   statusBar()->showMessage(tr(""));
 }
 
-void PDFFactory::openFile(void) {
+void HPDF::openFile(void) {
   QStringList fileNames = QFileDialog::getOpenFileNames(this,
                                                         tr("Open PDF file"), ".",
                                                         tr("PDF file (*.pdf)"));
@@ -186,7 +180,7 @@ void PDFFactory::openFile(void) {
   }
 }
 
-void PDFFactory::exportFile(void) {
+void HPDF::exportFile(void) {
   PDFExportDialog *exportDialog = new PDFExportDialog();
 
   QVector<PDFFileWidget*> selectedFiles = pdfTableView->getSelectedFiles();
@@ -196,7 +190,7 @@ void PDFFactory::exportFile(void) {
   }
 }
 
-void PDFFactory::exportAllFiles(void) {
+void HPDF::exportAllFiles(void) {
   PDFExportDialog *exportDialog = new PDFExportDialog();
 
   QVector<PDFFileWidget*> visibleFiles = pdfTableView->getVisibleFiles();
@@ -207,8 +201,8 @@ void PDFFactory::exportAllFiles(void) {
   }
 }
 
-void PDFFactory::about(void) {
-  QMessageBox::information(this, tr("PDFFactory"), tr("HPDF (Harringtons PDF) "
+void HPDF::about(void) {
+  QMessageBox::information(this, tr("HPDF"), tr("HPDF (Harringtons PDF) "
         "version 0.1.0\nWritten by: Ritchie Cunningham\n\n"
         "HPDF is primarily a PDF viewer with the prospect of becoming a full "
         "featured PDF editor.\n\n"

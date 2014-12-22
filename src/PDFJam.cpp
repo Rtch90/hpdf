@@ -8,7 +8,8 @@ PDFJam::PDFJam()
 {
 
 }
-//to make sure this folder exists and has no file inside
+
+/* Ensure this folder exists and has no files inside. */
 void PDFJam::makeCleanFolder(QString path){
   QString temp = "mkdir -p %1 && rm %2*";
   int value = system(temp.arg(path).arg(path).toStdString().c_str());
@@ -21,7 +22,8 @@ void PDFJam::pushCommand(QString cmd){
   if(!isRunning()) start();
 
 }
-//to rotate a page in a pdf file, clockwise direction
+
+/* Rotate a page in a pdf file, clockwise. */
 bool PDFJam::rotatePage(int fileIndex,int rotatedPageIndex,int degree){
   if ((degree!=90) && (degree!=180) && (degree!=270)){
     return false;
@@ -33,12 +35,12 @@ bool PDFJam::rotatePage(int fileIndex,int rotatedPageIndex,int degree){
 
 }
 
-//to remove a page in a pdf file
+/*Remove a page in a pdf file. */
 bool PDFJam::removePage(int fileIndex,int numPages, int deletedPageIndex){
   if ((deletedPageIndex<0)||(deletedPageIndex>=numPages)) {
     return false;
   }
-  //QString temp = "file1.pdf '-' file2.pdf '1,2' file3.pdf '2-' --outfile output.pdf"
+  /*QString temp = "file1.pdf '-' file2.pdf '1,2' file3.pdf '2-' --outfile output.pdf"*/
   QString rmTemp = "rm /tmp/pdffactory/%1/%2.pdf ";
   QString cmd = rmTemp.arg(QString::number(fileIndex)).arg(QString::number(deletedPageIndex));
   QString temp = "mv /tmp/pdffactory/%1/%2.pdf /tmp/pdffactory/%3/%4.pdf ";
@@ -80,9 +82,9 @@ void PDFJam::pastePage(int fileIndex,int numPages, int pageIndex, int slot=0){
 
 }
 void PDFJam::movePage(int fromFileIndex, int fromFileNumPage, int fromPageIndex, int toFileIndex, int toFileNumPage, int toPageIndex ){
-  //TODO:back up clipboard
+  //TODO: back up clipboard
 
-  //if this is page moving within files, update file Index.
+  /* If the page is moving within files, update file index. */
   if (toFileIndex == fromFileIndex) {
     toFileNumPage--;
     if(toPageIndex>fromPageIndex)
@@ -97,8 +99,8 @@ void PDFJam::savePageAsImage(Poppler::Page pp, QString dest,double dpi = 72){
   (void)dest;
   (void)dpi;
 }
-//to export file number "fileIndex" to destination
-//support n-up, orientation, offset options
+
+/* Export file number "fileIndex" to destination. */
 void PDFJam::exportFile(int fileIndex,int numPages, QString dest, bool isNup,QSize nup, bool isLandscape , bool hasTwoSidedOffset, int leftOffset){
 
   QString cmd = "pdfjam ";
@@ -114,9 +116,9 @@ void PDFJam::exportFile(int fileIndex,int numPages, QString dest, bool isNup,QSi
     QString nupTemp = " --nup '%1x%2' --frame true ";
     cmd += nupTemp.arg(QString::number(nup.width())).arg(QString::number(nup.height()));
   }
-  //offset
+  /* Offset. */
   if(hasTwoSidedOffset){
-    //pipe to another pdfjam to do offset, after other things are done
+    /* Pipe to another pdfjam to do offset, after other things have been done. */
     QString outStdout = " --outfile /dev/stdout | pdfjam ";
     cmd += outStdout.arg(dest);
 
@@ -124,7 +126,7 @@ void PDFJam::exportFile(int fileIndex,int numPages, QString dest, bool isNup,QSi
     QString offsetTemp =" --offset \"%1cm 0cm\" ";
     cmd+=offsetTemp.arg(QString::number(leftOffset));
 
-    //TODO - extension: 2 orientations, this one is after n-up, can extend later
+    /* TODO - extension: 2 orientations, this one is after n-up, can extend later */
     QString orientation = isLandscape?" --landscape ": " --no-landscape ";
     cmd += orientation;
 
@@ -145,6 +147,7 @@ void PDFJam::loadFile(QString fileName, int fileIndex,Poppler::Document* pd){
 
   QString temp = "pdfjam %1 %2 --outfile %3%4.pdf %5";
   QString cmd="";
+
   for (int i = 0; i < numPages; i++) {
     QString orientation = " --no-landscape ";
     QSizeF pageSize = pd->page(i)->pageSizeF();
@@ -155,6 +158,7 @@ void PDFJam::loadFile(QString fileName, int fileIndex,Poppler::Document* pd){
   }
   pushCommand(cmd);
 }
+
 QString PDFJam::nextCommand(){
 
   QString cmd;
@@ -170,7 +174,7 @@ bool PDFJam::isQueueEmpty(){
   return (cmdQueue.size()==0);
 }
 
-void PDFJam::run(){
+void PDFJam::run(void){
   while(!isQueueEmpty()){
     QString cmd = nextCommand();
     //int value = system(cmd.toStdString().c_str());

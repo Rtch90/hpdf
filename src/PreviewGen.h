@@ -23,7 +23,7 @@ protected:
   QMutex mutex;
 
 public:
-  double calcDpi(Poppler::Page *pdfPage, double dpi);
+  double calcDpi(Poppler::Page* pdfPage, double dpi);
 
 signals:
   void updatePreview(QImage);

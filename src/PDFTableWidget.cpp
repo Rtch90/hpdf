@@ -6,10 +6,9 @@
 #include <QtAlgorithms>
 #include "PDFJam.h"
 
-// Constructor
 PDFTableWidget::PDFTableWidget(QWidget* parent) : QFrame(parent)
 {
-  // Frame (Expanding with VBox) - Scroll Area (Expanding) - Container (Expanding with VBox) - Children
+  /* Frame (Expanding with VBox) - Scroll Area (Expanding) - Container (Expanding with VBox) - Children */
 
   setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -103,7 +102,7 @@ QVector<QString> PDFTableWidget::getVisibleFileNames() {
 }
 
 void PDFTableWidget::registerPage(PDFPageWidget* child){
-  //come up with a new name here
+  /* come up with a new name here. */
   QString name = QString("/home/pdfpage").append(QString::number(pageChilds.size()));
   pageChilds[name] = child;
   child->registerName(name);
@@ -164,13 +163,13 @@ void PDFTableWidget::fileRemoveButtonClicked(PDFFileWidget* sender) {
       selectedPages.remove(selectedPages.indexOf(pageWidget));
   }
 
-  // Handle remove file
+  /* Handle remove file. */
   sender->hide();
 }
 
 void PDFTableWidget::pageClicked(PDFPageWidget *sender, QMouseEvent* event, QString path){
   if (event->button() == Qt::LeftButton){
-    // Handle selection
+    /* Handle selection */
     if (selectedPages.size() > 0 && event->modifiers() != Qt::ControlModifier) {
 
       if (sender->isSelected() ){
@@ -260,8 +259,7 @@ void PDFTableWidget::deletePageSkipSelection(PDFPageWidget* pageWidget){
   pageChilds.remove(pageWidget->getName());
 
 
-  // PLS ACTIVATE THIS LINE ONCE EVERYTHING HAS BEEN FIXED
-  // :D :D :D :D :D :D
+  /* Uncomment once everything is fixed. */
   //delete page;
 
 }
@@ -288,8 +286,7 @@ void PDFTableWidget::deletePage(PDFPageWidget* pageWidget){
   pageChilds.remove(pageWidget->getName());
 
 
-  // PLS ACTIVATE THIS LINE ONCE EVERYTHING HAS BEEN FIXED
-  // :D :D :D :D :D :D
+  /* Uncomment once everything is fixed. */
   //delete page;
 
 }
@@ -306,7 +303,7 @@ void PDFTableWidget::cutPage(PDFPageWidget* pageWidget){
   pdfJam.cutPage(daddyID, daddy->pagesContainerWidget->pageWidgets.size(),pageID, id);
 }
 
-void PDFTableWidget::clearClipboard(){
+void PDFTableWidget::clearClipboard(void){
   copiedPages.clear();
 }
 

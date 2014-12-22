@@ -13,25 +13,25 @@ class PDFExportDialog : public QDialog {
   Q_OBJECT
 
 public:
-  explicit PDFExportDialog(QWidget *parent = 0);
+  explicit PDFExportDialog(QWidget* parent = 0);
 
 private:
-  QVector<PDFFileWidget*> fileWidgets;
-  QVector<QString> fileNames;
-  QVector<int> fileIndices;
+  QVector<PDFFileWidget*>     fileWidgets;
+  QVector<QString>            fileNames;
+  QVector<int>                fileIndices;
   QVector<QVector<QVariant> > options;
 
 private:
   PDFJam pdfJam;
   QGroupBox *fileListBox, *landscapeBox, *nupBox, *offsetBox;
 
-  QPushButton *btnSave, *btnSaveAll, *btnCancel;
-  QGridLayout *mainLayout;
+  QPushButton*  btnSave, *btnSaveAll, *btnCancel;
+  QGridLayout*  mainLayout;
 
-  QListWidget *fileList;
-  QLineEdit *txtRow, *txtCol;
-  QRadioButton *chkPortrait, *chkLandscape;
-  QLineEdit *txtLeftOffset;
+  QListWidget*  fileList;
+  QLineEdit*    txtRow, *txtCol;
+  QRadioButton* chkPortrait, *chkLandscape;
+  QLineEdit*    txtLeftOffset;
 
 public:
   void setFilesToExport(QVector<PDFFileWidget*> fileWidgets, QVector<QString> fileNames, QVector<int> fileIndices);
@@ -41,9 +41,9 @@ private slots:
   void btnSaveClicked(void);
   void btnSaveAllClicked(void);
   void btnCancelClicked(void);
-  void txtRowChanged(const QString &);
-  void txtColChanged(const QString &);
-  void txtLeftChanged(const QString &);
+  void txtRowChanged(const QString&);
+  void txtColChanged(const QString&);
+  void txtLeftChanged(const QString&);
   void chkLandscapeChanged(bool);
   void nupBoxToggled(bool);
   void offsetBoxToggled(bool);

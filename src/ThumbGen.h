@@ -12,7 +12,7 @@ class ThumbGen: public QThread
   Q_OBJECT
 
 public:
-  ThumbGen();
+  ThumbGen(void);
   void render(PDFPageWidget*,Poppler::Page*);
 
 protected:
@@ -23,7 +23,7 @@ protected:
   QMutex mutex;
 
 public:
-  double calcDpi(Poppler::Page *pdfPage, QSize targetSize);
+  double calcDpi(Poppler::Page* pdfPage, QSize targetSize);
 
 signals:
   void updateThumbnail(QImage, PDFPageWidget*);

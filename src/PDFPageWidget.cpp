@@ -86,7 +86,7 @@ void PDFPageWidget::pageRotate(){
   ((PDFTableWidget*)ancestor)->rotatePage(this);
 }
 
-void PDFPageWidget::rotate90() {
+void PDFPageWidget::rotate90(void) {
   rotation += 90;
   if (rotation == 360) rotation = 0;
 

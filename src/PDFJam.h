@@ -10,23 +10,26 @@ class QImage;
 class PDFJam: public QThread
 {
   Q_OBJECT
+
 public:
   PDFJam();
   void pushCommand(QString);
-  void loadFile(QString fileName,int,Poppler::Document*);
-  void exportFile(int ,int , QString , bool ,QSize , bool , bool , int );
+  void loadFile(QString fileName, int, Poppler::Document*);
+  void exportFile(int, int, QString, bool, QSize, bool, bool, int );
 
   void savePageAsImage(Poppler::Page pp, QString dest, double);
-  void movePage(int , int , int , int , int , int );
+  void movePage(int, int, int, int, int, int );
 
-  void pastePage(int ,int , int ,int);
-  void copyPage(int , int , int );
-  void cutPage(int ,int , int ,int);
+  void pastePage(int, int, int, int);
+  void copyPage(int, int, int);
+  void cutPage(int, int, int, int);
 
-  bool removePage(int ,int , int );
-  bool rotatePage(int,int,int);
+  bool removePage(int, int, int );
+  bool rotatePage(int, int, int);
+
 protected:
-  void run();
+  void run(void);
+
 private:
   void makeCleanFolder(QString);
   QVector<QString> cmdQueue;

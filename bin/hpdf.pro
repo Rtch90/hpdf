@@ -7,7 +7,7 @@ LIBS += -L/usr/lib -lpoppler-qt5
 
 # Input
 HEADERS += ../src/PDFExportDialog.h \
-           ../src/PDFFactory.h \
+           ../src/HPDF.h \
            ../src/PDFFileWidget.h \
            ../src/PDFJam.h \
            ../src/PDFPageWidget.h \
@@ -18,7 +18,7 @@ HEADERS += ../src/PDFExportDialog.h \
 
 SOURCES += ../src/main.cpp \
            ../src/PDFExportDialog.cpp \
-           ../src/PDFFactory.cpp \
+           ../src/HPDF.cpp \
            ../src/PDFFileWidget.cpp \
            ../src/PDFJam.cpp \
            ../src/PDFPageWidget.cpp \

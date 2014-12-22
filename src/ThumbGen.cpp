@@ -4,7 +4,7 @@
 
 
 #include "PDFPageWidget.h"
-ThumbGen::ThumbGen()
+ThumbGen::ThumbGen(void)
 {
 
 }
@@ -41,6 +41,5 @@ void ThumbGen::render(PDFPageWidget* pw,Poppler::Page* pp){
   pWidgets.append(pw);
   pPages.append(pp);
   mutex.unlock();
-
 }
 
