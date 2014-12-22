@@ -1,10 +1,13 @@
-#include <QApplication>
-#include "pdf_factory.h"
+// main.cpp
 
-int main(int argc, char* argv[]) {
-  QApplication a(argc, argv);
+#include <QApplication>
+#include "PDFFactory.h"
+
+int main(int argc, char *argv[])
+{
+  QApplication app(argc, argv);
   PDFFactory pdffactory;
   pdffactory.show();
-
-  return a.exec();
+  return app.exec();
 }
+

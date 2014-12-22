@@ -13,5 +13,6 @@
         <file>../img/expand.png</file>
         <file>../img/remove.png</file>
         <file>../img/rotate.png</file>
+        <file>../img/delete.png</file>
     </qresource>
 </RCC>
