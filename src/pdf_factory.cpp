@@ -42,7 +42,7 @@ void PDFFactory::createWidgets(void) {
   splitter->addWidget(pdfTableView);
   splitter->addWidget(pdfPreview);
   QList<int> splitterWidgetSizes;
-  splitterWidgetSizes << 900 << 400;
+  splitterWidgetSizes << 200 << 1000;
   splitter->setSizes(splitterWidgetSizes);
   splitter->setStretchFactor(0, 1);
   splitter->setStretchFactor(1, 0.5);
